@@ -1,12 +1,19 @@
-// user.schema.ts
-import { Schema, Document } from 'mongoose';
+// src/users/schemas/user.schema.ts
 
-export interface User extends Document {
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+
+export type UserDocument = User & Document;
+
+@Schema({
+  timestamps: true, // Automatically adds createdAt and updatedAt fields
+})
+export class User {
+  @Prop({ required: true, unique: true, minlength: 4, maxlength: 20 })
   username: string;
+
+  @Prop({ required: true, minlength: 6, maxlength: 50 })
   password: string;
 }
 
-export const UserSchema = new Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-});
+export const UserSchema = SchemaFactory.createForClass(User);
