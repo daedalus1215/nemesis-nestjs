@@ -12,13 +12,11 @@ export class UsersService {
     async createUser(createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
         const { username, password } = createUserDto;
 
-        // Check if the username already exists
         const existingUser = await this.userModel.findOne({ username });
         if (existingUser) {
             throw new ConflictException('Username already exists');
         }
 
-        // Hash the password before saving
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const createdUser = new this.userModel({
@@ -28,7 +26,6 @@ export class UsersService {
 
         const savedUser = await createdUser.save();
 
-        // Exclude password from the returned user
         const { password: _, ...result } = savedUser.toObject();
         return result;
     }
