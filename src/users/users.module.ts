@@ -1,21 +1,26 @@
-// src/users/users.module.ts
-
-import { Module, Logger } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 import { UsersService } from './domain/users.service';
 import { UsersController } from './app/controllers/users.controller';
-import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from './infra/user.schema';
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
-    }),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: `mongodb:`
+          + `//${configService.get<string>("DATABASE_HOST")}`
+          + `:${configService.get<string>("DATABASE_PORT")}`
+          + `/${configService.get<string>("DATABASE_NAME")}`,
+      }),
+      inject: [ConfigService],
+    }),
   ],
   providers: [UsersService],
   controllers: [UsersController],
+  exports: [UsersService, MongooseModule],
 })
-export class UsersModule {}
+export class UsersModule { }
