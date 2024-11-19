@@ -20,4 +20,9 @@ export class UsersController {
     return user;
   }
 
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  async getUsers(): Promise<any> {
+    return await this.usersService.getUsers();
+  }
 }

@@ -4,6 +4,7 @@ import { UsersService } from './domain/services/users.service';
 import { UsersController } from './app/controllers/users.controller';
 import { User, UserSchema } from './infra/user.schema';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserConverter } from './domain/converters/user.converter';
 
 @Module({
   imports: [
@@ -11,7 +12,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: `mongodb:`
+        uri: `${configService.get<string>("DATABASE_TYPE")}:`
           + `//${configService.get<string>("DATABASE_HOST")}`
           + `:${configService.get<string>("DATABASE_PORT")}`
           + `/${configService.get<string>("DATABASE_NAME")}`,
@@ -19,8 +20,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
   ],
-  providers: [UsersService],
+  providers: [UsersService, UserConverter],
   controllers: [UsersController],
-  exports: [UsersService, MongooseModule],
+  exports: [UsersService, UserConverter, MongooseModule],
 })
 export class UsersModule { }
