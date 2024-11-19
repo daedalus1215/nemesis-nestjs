@@ -4,11 +4,14 @@ import { CreateUserDto } from '../../app/dtos/create-user.dto';
 import { User, UserDocument } from '../../infra/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, UpdateWriteOpResult } from 'mongoose';
+import { UserConverter } from '../converters/user.converter';
+import { UserDto } from '../dtos/user.dto';
 
 @Injectable()
 export class UsersService {
 
-    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) { }
+    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>,
+        private readonly userConverter: UserConverter) { }
 
     async createUser(createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
         const { username, password } = createUserDto;
@@ -43,7 +46,9 @@ export class UsersService {
         return await this.userModel.updateOne({ _id: id }, user);
     }
 
-    async getUsers(): Promise<unknown> {
-        return await this.userModel.find();
-    }
+    async getUsers(): Promise<UserDto[]> {
+            const users = await this.userModel.find() as User[];
+            return users.map(user => this.userConverter.userToDto(user));
+
+        }
 }
