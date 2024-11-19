@@ -7,6 +7,7 @@ import { Model, UpdateWriteOpResult } from 'mongoose';
 
 @Injectable()
 export class UsersService {
+
     constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) { }
 
     async createUser(createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
@@ -40,5 +41,9 @@ export class UsersService {
 
     async update(id: string, user: UserDocument): Promise<UpdateWriteOpResult | null> {
         return await this.userModel.updateOne({ _id: id }, user);
+    }
+
+    async getUsers(): Promise<unknown> {
+        return await this.userModel.find();
     }
 }
