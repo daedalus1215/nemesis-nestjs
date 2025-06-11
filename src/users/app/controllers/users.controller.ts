@@ -38,13 +38,4 @@ export class UsersController {
     const user = await this.usersService.createUser(createUserDto);
     return user;
   }
-
-  @Get()
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Get list of all users' }) // Description for the endpoint
-  @ApiResponse({ status: 200, description: 'List of users retrieved successfully' })
-  @ApiResponse({ status: 500, description: 'Internal server error' })
-  async getUsers(): Promise<any> {
-    return await this.usersService.getUsers();
-  }
 }
