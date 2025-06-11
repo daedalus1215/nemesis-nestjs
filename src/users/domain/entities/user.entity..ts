@@ -10,7 +10,4 @@ export class User {
 
   @Column({ length: 100 })
   password: string;
-
-  @Column({ default: 0 })
-  balance: number;
 }

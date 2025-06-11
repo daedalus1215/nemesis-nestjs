@@ -17,7 +17,7 @@ import { GetUsersSwagger } from './get-user.swagger';
 export class GetUserAction {
   constructor(
     private readonly usersService: UsersService,
-    private readonly userConverter: GetUserConverter,
+    private readonly converter: GetUserConverter,
   ) {}
 
   @Get()
@@ -25,6 +25,6 @@ export class GetUserAction {
   @GetUsersSwagger()
   @UseGuards(JwtAuthGuard)
   async getUsers(): Promise<GetUserDto[]> {
-    return this.userConverter.userToDto(await this.usersService.getUsers());
+    return this.converter.userToDto(await this.usersService.getUsers());
   }
 }
