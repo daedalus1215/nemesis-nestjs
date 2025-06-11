@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersService } from './domain/services/users.service';
 import { UsersController } from './app/controllers/users.controller';
-import { User, UserSchema } from './infra/user.schema';
+import { User, UserSchema } from './domain/entities/user.entity.';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UserConverter } from './domain/converters/user.converter';
+import { UserConverter } from './app/controllers/get-user-action/get-user.converter';
 
 @Module({
   imports: [
@@ -12,10 +12,11 @@ import { UserConverter } from './domain/converters/user.converter';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: `${configService.get<string>("DATABASE_TYPE")}:`
-          + `//${configService.get<string>("DATABASE_HOST")}`
-          + `:${configService.get<string>("DATABASE_PORT")}`
-          + `/${configService.get<string>("DATABASE_NAME")}`,
+        uri:
+          `${configService.get<string>('DATABASE_TYPE')}:` +
+          `//${configService.get<string>('DATABASE_HOST')}` +
+          `:${configService.get<string>('DATABASE_PORT')}` +
+          `/${configService.get<string>('DATABASE_NAME')}`,
       }),
       inject: [ConfigService],
     }),
@@ -24,4 +25,4 @@ import { UserConverter } from './domain/converters/user.converter';
   controllers: [UsersController],
   exports: [UsersService, UserConverter, MongooseModule],
 })
-export class UsersModule { }
+export class UsersModule {}
