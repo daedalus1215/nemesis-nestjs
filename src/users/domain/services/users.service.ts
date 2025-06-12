@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '../../app/dtos/create-user.dto';
 import { ConflictException, Injectable } from '@nestjs/common';
-import { User } from '../entities/user.entity.';
+import { User } from '../entities/user.entity';
 import { UserRepository } from 'src/users/infrastructure/user.repository';
 
 @Injectable()
@@ -24,20 +24,17 @@ export class UsersService {
     });
   }
 
-//   async findByUsername(username: string): Promise<UserDocument | null> {
-//     return this.userModel.findOne({ username });
-//   }
+  async findByUsername(username: string): Promise<User | null> {
+    return await this.userRepository.findByUsername(username);
+  }
 
-//   async findById(id: string): Promise<UserDocument | null> {
-//     return this.userModel.findById(id);
-//   }
+  async findById(id: number): Promise<User | null> {
+    return await this.userRepository.findById(id);
+  }
 
-//   async update(
-//     id: string,
-//     user: UserDocument,
-//   ): Promise<UpdateWriteOpResult | null> {
-//     return await this.userModel.updateOne({ _id: id }, user);
-//   }
+  async update(id: number, user: User): Promise<User> {
+    return await this.userRepository.update(id, user);
+  }
 
   async getUsers(): Promise<User[]> {
     return await this.userRepository.findAll();
