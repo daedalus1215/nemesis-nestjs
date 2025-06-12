@@ -1,54 +1,42 @@
-import { ConflictException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '../../app/dtos/create-user.dto';
-import { User, UserDocument } from '../../infra/user.schema';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateWriteOpResult } from 'mongoose';
-import { UserConverter } from '../converters/user.converter';
-import { UserDto } from '../dtos/user.dto';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { User } from '../entities/user.entity';
+import { UserRepository } from 'src/users/infrastructure/user.repository';
 
 @Injectable()
 export class UsersService {
+  constructor(private readonly userRepository: UserRepository) {}
 
-    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>,
-        private readonly userConverter: UserConverter) { }
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const { username, password } = createUserDto;
 
-    async createUser(createUserDto: CreateUserDto): Promise<Omit<User, 'password'>> {
-        const { username, password } = createUserDto;
-
-        const existingUser = await this.userModel.findOne({ username });
-        if (existingUser) {
-            throw new ConflictException('Username already exists');
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const createdUser = new this.userModel({
-            username,
-            password: hashedPassword,
-        });
-
-        const savedUser = await createdUser.save();
-
-        const { password: _, ...result } = savedUser.toObject();
-        return result;
+    const existingUser = await this.userRepository.findByUsername(username);
+    if (existingUser) {
+      throw new ConflictException('Username already exists');
     }
 
-    async findByUsername(username: string): Promise<UserDocument | null> {
-        return this.userModel.findOne({ username });
-    }
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    async findById(id: string): Promise<UserDocument | null> {
-        return this.userModel.findById(id);
-    }
+    return await this.userRepository.create({
+      username,
+      password: hashedPassword,
+    });
+  }
 
-    async update(id: string, user: UserDocument): Promise<UpdateWriteOpResult | null> {
-        return await this.userModel.updateOne({ _id: id }, user);
-    }
+  async findByUsername(username: string): Promise<User | null> {
+    return await this.userRepository.findByUsername(username);
+  }
 
-    async getUsers(): Promise<UserDto[]> {
-            const users = await this.userModel.find() as User[];
-            return users.map(user => this.userConverter.userToDto(user));
+  async findById(id: number): Promise<User | null> {
+    return await this.userRepository.findById(id);
+  }
 
-        }
+  async update(id: number, user: User): Promise<User> {
+    return await this.userRepository.update(id, user);
+  }
+
+  async getUsers(): Promise<User[]> {
+    return await this.userRepository.findAll();
+  }
 }

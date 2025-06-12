@@ -1,22 +1,26 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import * as Joi from 'joi';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV}`,
+      validationSchema: Joi.object({
+        DATABASE: Joi.string().required(),
+      }),
     }),
-    MongooseModule.forRootAsync({
+    TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        uri: `mongodb:`
-          + `//${configService.get<string>("DATABASE_HOST")}`
-          + `:${configService.get<string>("DATABASE_PORT")}`
-          + `/${configService.get<string>("DATABASE_NAME")}`,
+        type: 'sqlite',
+        database: configService.get<string>('DATABASE'),
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: false,
       }),
       inject: [ConfigService],
     }),
@@ -26,4 +30,4 @@ import { AuthModule } from './auth/auth.module';
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

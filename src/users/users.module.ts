@@ -1,27 +1,25 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
 import { UsersService } from './domain/services/users.service';
-import { UsersController } from './app/controllers/users.controller';
-import { User, UserSchema } from './infra/user.schema';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UserConverter } from './domain/converters/user.converter';
+import { GetProfileAction } from './app/controllers/get-profile-action/get-profile.action';
+import { User } from './domain/entities/user.entity';
+import { GetUserAction } from './app/controllers/get-user-action/get-user.action';
+import { RegisterUserAction } from './app/controllers/register-user-action/register-user.action';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserRepository } from './infrastructure/user.repository';
+import { GetProfileConverter } from './app/controllers/get-profile-action/get-profile.converter';
+import { GetUserConverter } from './app/controllers/get-user-action/get-user.converter';
+import { RegisterUserConverter } from './app/controllers/register-user-action/register-user.converter';
 
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        uri: `${configService.get<string>("DATABASE_TYPE")}:`
-          + `//${configService.get<string>("DATABASE_HOST")}`
-          + `:${configService.get<string>("DATABASE_PORT")}`
-          + `/${configService.get<string>("DATABASE_NAME")}`,
-      }),
-      inject: [ConfigService],
-    }),
+  imports: [TypeOrmModule.forFeature([User])],
+  providers: [
+    UsersService,
+    UserRepository,
+    GetProfileConverter,
+    GetUserConverter,
+    RegisterUserConverter,
   ],
-  providers: [UsersService, UserConverter],
-  controllers: [UsersController],
-  exports: [UsersService, UserConverter, MongooseModule],
+  controllers: [GetProfileAction, GetUserAction, RegisterUserAction],
+  exports: [UsersService, UserRepository],
 })
-export class UsersModule { }
+export class UsersModule {}
