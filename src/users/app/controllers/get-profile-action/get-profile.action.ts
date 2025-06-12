@@ -6,10 +6,10 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/auth/app/jwt-auth.guard';
 import { GetProfileDto } from './dtos/responses/get-profile.dto';
 import { GetProfileSwagger } from './get-profile.swagger';
 import { GetProfileConverter } from './get-profile.converter';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('users')
 export class GetProfileAction {
