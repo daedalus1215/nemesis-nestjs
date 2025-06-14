@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { Balance } from 'src/shared/shared-entities/entities/balance.entity';
 import { BalanceRepositoryPort } from '../../domain/repositories/balance.repository';
 
@@ -27,7 +27,7 @@ export class BalanceRepository implements BalanceRepositoryPort {
     return this.repository.save(balances);
   }
 
-  create(data: Partial<Balance>): Balance {
+  create(data: DeepPartial<Balance>): Balance {
     return this.repository.create(data);
   }
 

@@ -1,27 +1,22 @@
-import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '../../app/dtos/create-user.dto';
-import { ConflictException, Injectable } from '@nestjs/common';
 import { User } from '../../../shared/shared-entities/entities/user.entity';
 import { UserRepository } from 'src/users/infrastructure/user.repository';
+import { Injectable } from '@nestjs/common';
+import { CreateUserTransactionScript } from '../transaction-scripts/create-user-ts/create-user.transaction.script';
+import { BalanceAggregator } from 'src/ledger/balance/domain/aggregators/balance.aggregator';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly createUserTransactionScript: CreateUserTransactionScript,
+    private readonly balanceAggregator: BalanceAggregator,
+  ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { username, password } = createUserDto;
-
-    const existingUser = await this.userRepository.findByUsername(username);
-    if (existingUser) {
-      throw new ConflictException('Username already exists');
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    return await this.userRepository.create({
-      username,
-      password: hashedPassword,
-    });
+    const user = await this.createUserTransactionScript.apply(createUserDto);
+    await this.balanceAggregator.createNewBalance(user.id);
+    return user;
   }
 
   async findByUsername(username: string): Promise<User | null> {
