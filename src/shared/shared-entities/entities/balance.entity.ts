@@ -10,7 +10,7 @@ import { Transaction } from './transaction.entity';
 
 @Entity()
 export class Balance {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn({ type: 'integer' })
   id: string;
 
   @Column('decimal', { precision: 20, scale: 8, default: 0 })
