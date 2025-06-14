@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UsersService } from './domain/services/users.service';
 import { GetProfileAction } from './app/controllers/get-profile-action/get-profile.action';
-import { User } from './domain/entities/user.entity';
+import { User } from '../shared/shared-entities/entities/user.entity';
 import { GetUserAction } from './app/controllers/get-user-action/get-user.action';
 import { RegisterUserAction } from './app/controllers/register-user-action/register-user.action';
 import { TypeOrmModule } from '@nestjs/typeorm';
