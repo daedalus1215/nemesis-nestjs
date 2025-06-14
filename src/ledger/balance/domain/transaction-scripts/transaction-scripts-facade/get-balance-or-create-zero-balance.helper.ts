@@ -3,20 +3,23 @@ import { BalanceRepository } from '../../../infrastructure/repositories/balance.
 import { Balance } from 'src/shared/shared-entities/entities/balance.entity';
 
 @Injectable()
-export class GetBalanceHelper {
+export class GetBalanceOrCreateZeroBalanceHelper {
   constructor(private readonly balanceRepository: BalanceRepository) {}
 
   async apply(userId: number): Promise<Balance> {
-    let balance = await this.balanceRepository.findByOwnerId(userId);
+    const balance = await this.balanceRepository.findByOwnerId(userId);
 
-    if (!balance) {
-      balance = this.balanceRepository.create({
-        owner: balance.owner,
-        amount: 0,
-      });
-      await this.balanceRepository.save(balance);
+    if (balance) {
+      return balance;
     }
 
-    return balance;
+    await this.balanceRepository.save(
+      await this.balanceRepository.create({
+        owner: {
+          id: userId,
+        },
+        amount: 0,
+      }),
+    );
   }
 }
