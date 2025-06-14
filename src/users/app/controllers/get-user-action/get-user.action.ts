@@ -25,6 +25,6 @@ export class GetUserAction {
   @GetUsersSwagger()
   @UseGuards(JwtAuthGuard)
   async getUsers(): Promise<GetUserDto[]> {
-    return this.converter.userToDto(await this.usersService.getUsers());
+    return this.converter.apply(await this.usersService.getUsers());
   }
 }

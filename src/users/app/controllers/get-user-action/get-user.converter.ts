@@ -4,10 +4,11 @@ import { GetUserDto } from 'src/users/app/controllers/get-user-action/dtos/respo
 
 @Injectable()
 export class GetUserConverter {
-  public userToDto(entities: User[]): GetUserDto[] {
+  public apply(entities: User[]): GetUserDto[] {
+    console.log(entities);
     return entities.map((entity) => ({
       username: entity.username,
-      id: entity.id.toString(),
+      id: entity.id,
     }));
   }
 }

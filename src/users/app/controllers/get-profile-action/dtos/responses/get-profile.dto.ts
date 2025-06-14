@@ -5,7 +5,7 @@ export class GetProfileDto {
     description: 'The unique identifier of the user',
     example: '1',
   })
-  id: string;
+  id: number;
 
   @ApiProperty({
     description: 'The username of the user',
