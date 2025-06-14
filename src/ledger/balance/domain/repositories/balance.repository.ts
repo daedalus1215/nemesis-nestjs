@@ -1,4 +1,4 @@
-import { Balance } from '../entities/balance.entity';
+import { Balance } from 'src/shared/shared-entities/entities/balance.entity';
 
 export type BalanceRepositoryPort = {
   findByOwnerId(owner: number): Promise<Balance | null>;

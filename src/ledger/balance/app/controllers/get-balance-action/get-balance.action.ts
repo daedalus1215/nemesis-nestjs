@@ -10,8 +10,8 @@ import {
 export class GetBalanceAction {
   constructor(private readonly balanceService: BalanceService) {}
 
-  @Get()
+  @Get('/for-user')
   async execute(@GetAuthUser() user: AuthUser): Promise<Balance> {
-    return this.balanceService.getBalance(user.userId);
+    return this.balanceService.getBalanceByUserId(user.userId);
   }
 }

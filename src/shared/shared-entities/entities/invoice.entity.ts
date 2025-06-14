@@ -31,22 +31,15 @@ export class Invoice {
   @Column({ type: 'varchar', length: 20 })
   status: 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'PAID' | 'CANCELLED';
 
-  @Column({ type: 'jsonb', nullable: true })
-  signatures: {
-    userId: string;
-    signature: string;
-    timestamp: string;
-  }[];
-
   @Column({ type: 'varchar', nullable: true })
   rejectionReason: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   dueDate: Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 }

@@ -25,9 +25,9 @@ export class Transaction {
   @Column({ type: 'varchar', length: 20 })
   status: 'PENDING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 }

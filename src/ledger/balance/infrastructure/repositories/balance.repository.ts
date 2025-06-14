@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Balance } from '../../domain/entities/balance.entity';
+import { Balance } from 'src/shared/shared-entities/entities/balance.entity';
 import { BalanceRepositoryPort } from '../../domain/repositories/balance.repository';
 
 @Injectable()
@@ -29,5 +29,14 @@ export class BalanceRepository implements BalanceRepositoryPort {
 
   create(data: Partial<Balance>): Balance {
     return this.repository.create(data);
+  }
+
+  async findByOwnerIdWithTransactions(
+    ownerId: number,
+  ): Promise<Balance | null> {
+    return this.repository.findOne({
+      where: { owner: { id: ownerId } },
+      relations: ['incomingTransactions', 'outgoingTransactions'],
+    });
   }
 }

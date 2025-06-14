@@ -1,4 +1,4 @@
-import { Transaction } from '../entities/transaction.entity';
+import { Transaction } from 'src/shared/shared-entities/entities/transaction.entity';
 
 export type TransactionRepositoryPort = {
   save(transaction: Transaction): Promise<Transaction>;
