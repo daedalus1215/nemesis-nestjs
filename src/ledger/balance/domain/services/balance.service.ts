@@ -1,31 +1,15 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Balance } from '../entities/balance.entity';
-import { Transaction } from '../entities/transaction.entity';
-import { BalanceRepositoryPort } from '../repositories/balance.repository';
-import { TransactionRepositoryPort } from '../repositories/transaction.repository';
+import { Injectable } from '@nestjs/common';
+import { Transaction } from 'src/shared/shared-entities/entities/transaction.entity';
+import { TransferTS } from '../transaction-scripts/transfer-TS/transfer.transaction.script';
+import { GetBalanceTS } from '../transaction-scripts/get-balance-TS/get-balance.transaction.script';
+import { Balance } from 'src/shared/shared-entities/entities/balance.entity';
 
 @Injectable()
 export class BalanceService {
   constructor(
-    @Inject('BalanceRepositoryPort')
-    private readonly balanceRepository: BalanceRepositoryPort,
-    @Inject('TransactionRepositoryPort')
-    private readonly transactionRepository: TransactionRepositoryPort,
+    private readonly transferTransactionScript: TransferTS,
+    private readonly getBalanceTransactionScript: GetBalanceTS,
   ) {}
-
-  async getBalance(userId: number): Promise<Balance> {
-    let balance = await this.balanceRepository.findByOwnerId(userId);
-
-    if (!balance) {
-      balance = this.balanceRepository.create({
-        owner: balance.owner,
-        amount: 0,
-      });
-      await this.balanceRepository.save(balance);
-    }
-
-    return balance;
-  }
 
   async transfer(
     fromUserId: number,
@@ -33,32 +17,15 @@ export class BalanceService {
     amount: number,
     description?: string,
   ): Promise<Transaction> {
-    const fromBalance = await this.getBalance(fromUserId);
-    const toBalance = await this.getBalance(toUserId);
-
-    if (fromBalance.amount < amount) {
-      throw new Error('Insufficient balance');
-    }
-
-    const transaction = this.transactionRepository.create({
-      fromBalance,
-      toBalance,
+    return this.transferTransactionScript.apply(
+      fromUserId,
+      toUserId,
       amount,
       description,
-      status: 'PENDING',
-    });
+    );
+  }
 
-    await this.transactionRepository.save(transaction);
-
-    // Update balances
-    fromBalance.amount -= amount;
-    toBalance.amount += amount;
-
-    await this.balanceRepository.saveMany([fromBalance, toBalance]);
-
-    transaction.status = 'COMPLETED';
-    await this.transactionRepository.save(transaction);
-
-    return transaction;
+  async getBalance(userId: number): Promise<Balance> {
+    return this.getBalanceTransactionScript.apply(userId);
   }
 }

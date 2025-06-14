@@ -1,7 +1,10 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { BalanceService } from '../../../domain/services/balance.service';
-import { Balance } from '../../../domain/entities/balance.entity';
-import { AuthUser, GetAuthUser } from '../../../../../auth/app/decorators/get-auth-user.decorator';
+import { Balance } from 'src/shared/shared-entities/entities/balance.entity';
+import {
+  AuthUser,
+  GetAuthUser,
+} from 'src/auth/app/decorators/get-auth-user.decorator';
 
 @Controller('balances')
 export class GetBalanceAction {
