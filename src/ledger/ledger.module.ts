@@ -11,7 +11,7 @@ import { GetBalanceOrCreateZeroBalanceHelper } from './balance/domain/transactio
 import { TransactionScriptFacade } from './balance/domain/transaction-scripts/transaction-scripts-facade/transaction.script.facade';
 import { GetAllTransactionsForUserTS } from './balance/domain/transaction-scripts/get-all-transactions-for-user-TS/get-all-transactions-for-user.transaction.script';
 import { TransferTS } from './balance/domain/transaction-scripts/transfer-TS/transfer.transaction.script';
-import { TransferConverter } from './balance/app/controllers/transfer-action/transfer.converter';
+import { ConvertTransactionToDto } from './balance/app/controllers/transfer-action/convert-transaction-to-dto.converter';
 import { BalanceAggregator } from './balance/domain/aggregators/balance.aggregator';
 import { GetBalanceTS } from './balance/domain/transaction-scripts/get-balance-TS/get-balance.transaction.script';
 
@@ -28,7 +28,7 @@ import { GetBalanceTS } from './balance/domain/transaction-scripts/get-balance-T
     GetBalanceOrCreateZeroBalanceHelper,
     GetAllTransactionsForUserTS,
     TransferTS,
-    TransferConverter,
+    ConvertTransactionToDto,
     BalanceAggregator,
     GetBalanceTS,
   ],
