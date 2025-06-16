@@ -1,4 +1,4 @@
-import { applyDecorators, UseGuards } from '@nestjs/common';
+import { applyDecorators, HttpStatus, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags, ApiResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../auth/jwt-auth.guard';
 
@@ -15,11 +15,11 @@ export type ProtectedActionOptions = {
 export const ProtectedAction = (options: ProtectedActionOptions) => {
   const commonResponses = [
     {
-      status: 401,
+      status: HttpStatus.UNAUTHORIZED,
       description: 'Unauthorized - Invalid or missing JWT token.',
     },
     {
-      status: 403,
+      status: HttpStatus.FORBIDDEN,
       description:
         'Forbidden - User does not have permission for this resource.',
     },

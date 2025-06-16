@@ -10,8 +10,8 @@ export type TransferResponse = {
 };
 
 @Injectable()
-export class TransferConverter {
-  toResponse(transaction: Transaction): TransferResponse {
+export class ConvertTransactionToDto {
+  apply(transaction: Transaction): TransferResponse {
     return {
       fromBalanceId: transaction.fromBalance.id,
       toBalanceId: transaction.toBalance.id,
