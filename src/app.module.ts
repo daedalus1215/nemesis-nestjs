@@ -10,9 +10,13 @@ import * as Joi from 'joi';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env.${process.env.NODE_ENV}`,
+      envFilePath: ['.env', `.env.${process.env.NODE_ENV}`],
       validationSchema: Joi.object({
         DATABASE: Joi.string().required(),
+        JWT_SECRET: Joi.string().required(),
+        COOKIE_KEY: Joi.string().required(),
+        NODE_ENV: Joi.string().required(),
+        JWT_EXPIRES_IN: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRootAsync({

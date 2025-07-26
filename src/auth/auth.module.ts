@@ -8,20 +8,22 @@ import { LoginAction } from './app/actions/login.action';
 import { UsersModule } from 'src/users/users.module';
 
 @Module({
-    imports: [
-        PassportModule.register({ defaultStrategy: 'jwt' }),
-        JwtModule.registerAsync({
-            imports: [ConfigModule],
-            useFactory: async (configService: ConfigService) => ({
-                secret: configService.get<string>('JWT_SECRET'),
-                signOptions: { expiresIn: '3weeks' },
-            }),
-            inject: [ConfigService],
-        }),
-        UsersModule,
-    ],
-    providers: [AuthService, JwtStrategy],
-    controllers: [LoginAction],
-    exports: [AuthService],
+  imports: [
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: {
+          expiresIn: configService.get<string>('JWT_EXPIRES_IN', '1m'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    UsersModule,
+  ],
+  providers: [AuthService, JwtStrategy],
+  controllers: [LoginAction],
+  exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}
