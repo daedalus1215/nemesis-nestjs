@@ -14,10 +14,19 @@ import { TransferTS } from './balance/domain/transaction-scripts/transfer-TS/tra
 import { ConvertTransactionToDto } from './balance/app/controllers/transfer-action/convert-transaction-to-dto.converter';
 import { BalanceAggregator } from './balance/domain/aggregators/balance.aggregator';
 import { GetBalanceTS } from './balance/domain/transaction-scripts/get-balance-TS/get-balance.transaction.script';
+import { GetAllTransactionsForUserAction } from './balance/app/controllers/get-all-transactions-for-user-action/get-all-transactions-for-user.action';
+import { GetTransactionsPaginatedAction } from './balance/app/controllers/get-transactions-paginated-action/get-transactions-paginated.action';
+import { UserAggregator } from 'src/users/domain/user.aggregator';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Balance, Transaction])],
-  controllers: [GetBalanceAction, TransferAction],
+  imports: [TypeOrmModule.forFeature([Balance, Transaction]), UsersModule],
+  controllers: [
+    GetBalanceAction,
+    TransferAction,
+    GetAllTransactionsForUserAction,
+    GetTransactionsPaginatedAction,
+  ],
   providers: [
     BalanceService,
     BalanceRepository,
@@ -31,7 +40,8 @@ import { GetBalanceTS } from './balance/domain/transaction-scripts/get-balance-T
     ConvertTransactionToDto,
     BalanceAggregator,
     GetBalanceTS,
+    UserAggregator,
   ],
-  exports: [BalanceService, BalanceAggregator, GetBalanceTS],
+  exports: [BalanceAggregator],
 })
 export class LedgerModule {}

@@ -1,33 +1,27 @@
-import { BadRequestException } from '@nestjs/common';
-import { UsersService } from './services/users.service';
+import { Injectable } from '@nestjs/common';
+import { UserRepository } from 'src/users/infrastructure/user.repository';
 
+type UserInfo = {
+  id: number;
+  username: string;
+};
+
+@Injectable()
 export class UserAggregator {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly repository: UserRepository) {}
 
-  async transfer(
-    senderId: number,
-    receiverId: number,
-    amount: number,
-  ): Promise<void> {
-    // if (amount <= 0) {
-    //   throw new BadRequestException('Transfer amount must be positive');
-    // }
+  async getUsersByIds(userIds: number[]): Promise<UserInfo[]> {
+    if (userIds.length === 0) return [];
 
-    // const sender = await this.usersService.findById(senderId);
-    // const receiver = await this.usersService.findById(receiverId);
-
-    // if (!sender || !receiver) {
-    //   throw new BadRequestException('Sender or receiver not found');
-    // }
-
-    // if (sender.balance < amount) {
-    //   throw new BadRequestException('Insufficient funds');
-    // }
-
-    // sender.balance -= amount;
-    // receiver.balance += amount;
-
-    // await this.usersService.update(sender.id, sender);
-    // await this.usersService.update(receiver.id, receiver);
+    try {
+      const users = await this.repository.findByIds(userIds);
+      return users.map((user) => ({
+        id: user.id,
+        username: user.username,
+      }));
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+      return [];
+    }
   }
 }

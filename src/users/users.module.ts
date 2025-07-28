@@ -13,10 +13,10 @@ import { CreateUserTransactionScript } from './domain/transaction-scripts/create
 import { UserExistsValidator } from './domain/transaction-scripts/create-user-ts/validators/user-exists.validatgor';
 import { IsPasswordStrongValidator } from './domain/transaction-scripts/create-user-ts/validators/is-password-strong.validator';
 import { ConfigModule } from '@nestjs/config';
-import { LedgerModule } from 'src/ledger/ledger.module';
+import { UserAggregator } from './domain/user.aggregator';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), ConfigModule, LedgerModule],
+  imports: [TypeOrmModule.forFeature([User]), ConfigModule],
   providers: [
     UsersService,
     UserRepository,
@@ -26,8 +26,9 @@ import { LedgerModule } from 'src/ledger/ledger.module';
     CreateUserTransactionScript,
     UserExistsValidator,
     IsPasswordStrongValidator,
+    UserAggregator,
   ],
   controllers: [GetProfileAction, GetUserAction, RegisterUserAction],
-  exports: [UsersService, UserRepository],
+  exports: [UserAggregator, UserRepository, UsersService],
 })
 export class UsersModule {}

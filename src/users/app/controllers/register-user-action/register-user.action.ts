@@ -18,8 +18,9 @@ export class RegisterUserAction {
   async register(
     @Body() registerUserDto: RegisterUserDto,
   ): Promise<RegisterUserResponseDto> {
-    return this.converter.toResponse(
-      await this.usersService.createUser(registerUserDto),
-    );
+    // Create user first
+    const user = await this.usersService.createUser(registerUserDto);
+
+    return this.converter.toResponse(user);
   }
 }

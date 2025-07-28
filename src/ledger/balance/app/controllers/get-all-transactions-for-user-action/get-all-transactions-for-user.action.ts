@@ -2,8 +2,8 @@ import { Controller, Get } from '@nestjs/common';
 import { AuthUser } from 'src/auth/app/decorators/get-auth-user.decorator';
 import { GetAuthUser } from 'src/auth/app/decorators/get-auth-user.decorator';
 import { BalanceService } from 'src/ledger/balance/domain/services/balance.service';
-import { Transaction } from 'src/shared/shared-entities/entities/transaction.entity';
 import { ProtectedAction } from 'src/shared/shared-entities/application/protected-action-options';
+import { GetAllTransactionsForUserResponseDto } from './dtos/responses/get-all-transactions-for-user.dto';
 
 @Controller('balances')
 export class GetAllTransactionsForUserAction {
@@ -14,7 +14,9 @@ export class GetAllTransactionsForUserAction {
     tag: 'Balance',
     summary: 'Get all transactions for a user',
   })
-  async execute(@GetAuthUser() user: AuthUser): Promise<Transaction[]> {
+  async execute(
+    @GetAuthUser() user: AuthUser,
+  ): Promise<GetAllTransactionsForUserResponseDto[]> {
     return this.balanceService.getAllTransactionsForUser(user.userId);
   }
 }

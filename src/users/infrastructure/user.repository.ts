@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { User } from '../../shared/shared-entities/entities/user.entity';
 
 @Injectable()
@@ -21,6 +21,11 @@ export class UserRepository {
 
   async findById(id: number): Promise<User | null> {
     return this.repository.findOne({ where: { id } });
+  }
+
+  async findByIds(ids: number[]): Promise<User[]> {
+    if (ids.length === 0) return [];
+    return this.repository.find({ where: { id: In(ids) } });
   }
 
   async update(id: number, user: Partial<User>): Promise<User | null> {

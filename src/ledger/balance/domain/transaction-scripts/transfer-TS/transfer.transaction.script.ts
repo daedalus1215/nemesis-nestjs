@@ -16,7 +16,7 @@ export class TransferTS {
     fromUserId: number,
     toUserId: number,
     amount: number,
-    description?: string
+    description?: string,
   ): Promise<Transaction> {
     const fromBalance = await this.facade.getBalance(fromUserId);
     const toBalance = await this.facade.getBalance(toUserId);

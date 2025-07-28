@@ -3,19 +3,16 @@ import { User } from '../../../shared/shared-entities/entities/user.entity';
 import { UserRepository } from 'src/users/infrastructure/user.repository';
 import { Injectable } from '@nestjs/common';
 import { CreateUserTransactionScript } from '../transaction-scripts/create-user-ts/create-user.transaction.script';
-import { BalanceAggregator } from 'src/ledger/balance/domain/aggregators/balance.aggregator';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly createUserTransactionScript: CreateUserTransactionScript,
-    private readonly balanceAggregator: BalanceAggregator,
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const user = await this.createUserTransactionScript.apply(createUserDto);
-    await this.balanceAggregator.createNewBalance(user.id);
     return user;
   }
 
