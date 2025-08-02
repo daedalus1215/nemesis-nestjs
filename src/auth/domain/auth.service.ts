@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from '../../shared/shared-entities/entities/user.entity';
-import { UsersService } from 'src/users/domain/services/users.service';
+import { UsersService } from '../../users/domain/services/users.service';
 
 @Injectable()
 export class AuthService {
@@ -16,9 +16,12 @@ export class AuthService {
     password: string,
   ): Promise<Omit<User, 'password'> | null> {
     const user = await this.usersService.findByUsername(username);
+    console.log('user retrieved from db upon login', user);
     if (user && (await bcrypt.compare(password, user.password))) {
-      // If the user is found and the password matches, return the user object without the password
-      return user;
+
+      const { password: _, ...result } = user;
+      console.log('result', result);
+      return result;
     }
     return null;
   }
