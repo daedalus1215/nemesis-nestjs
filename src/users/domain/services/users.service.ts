@@ -20,6 +20,10 @@ export class UsersService {
     return await this.userRepository.findByUsername(username);
   }
 
+  async findByUsernameWithPassword(username: string): Promise<User | null> {
+    return await this.userRepository.findByUsernameWithPassword(username);
+  }
+
   async findById(id: number): Promise<User | null> {
     return await this.userRepository.findById(id);
   }

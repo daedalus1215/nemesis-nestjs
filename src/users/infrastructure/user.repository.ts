@@ -19,6 +19,13 @@ export class UserRepository {
     return this.repository.findOne({ where: { username } });
   }
 
+  async findByUsernameWithPassword(username: string): Promise<User | null> {
+    return this.repository.findOne({ 
+      where: { username },
+      select: ['id', 'username', 'password']
+    });
+  }
+
   async findById(id: number): Promise<User | null> {
     return this.repository.findOne({ where: { id } });
   }

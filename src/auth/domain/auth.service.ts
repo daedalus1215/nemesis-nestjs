@@ -15,10 +15,12 @@ export class AuthService {
     username: string,
     password: string,
   ): Promise<Omit<User, 'password'> | null> {
-    const user = await this.usersService.findByUsername(username);
+    const user = await this.usersService.findByUsernameWithPassword(username);
     console.log('user retrieved from db upon login', user);
     if (user && (await bcrypt.compare(password, user.password))) {
-      return user;
+      const { password: _, ...result } = user;
+      console.log('result', result);
+      return result;
     }
     return null;
   }
