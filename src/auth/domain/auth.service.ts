@@ -18,10 +18,7 @@ export class AuthService {
     const user = await this.usersService.findByUsername(username);
     console.log('user retrieved from db upon login', user);
     if (user && (await bcrypt.compare(password, user.password))) {
-
-      const { password: _, ...result } = user;
-      console.log('result', result);
-      return result;
+      return user;
     }
     return null;
   }
