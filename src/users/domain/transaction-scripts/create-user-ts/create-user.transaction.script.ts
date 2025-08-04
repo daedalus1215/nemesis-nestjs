@@ -3,7 +3,7 @@ import { IsPasswordStrongValidator } from './validators/is-password-strong.valid
 import { ConfigService } from '@nestjs/config';
 import { UserRepository } from 'src/users/infrastructure/user.repository';
 import { CreateUserDto } from 'src/users/app/dtos/create-user.dto';
-import { User } from 'src/shared/shared-entities/entities/user.entity';
+import { User } from 'src/users/domain/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
 

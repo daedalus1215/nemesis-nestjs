@@ -1,4 +1,4 @@
-import { User } from 'src/shared/shared-entities/entities/user.entity';
+import { User } from 'src/users/domain/entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { GetUserDto } from 'src/users/app/controllers/get-user-action/dtos/responses/get-user.dto';
 
