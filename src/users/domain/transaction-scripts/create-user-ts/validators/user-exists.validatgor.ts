@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { User } from 'src/shared/shared-entities/entities/user.entity';
+import { User } from 'src/users/domain/entities/user.entity';
 
 @Injectable()
 export class UserExistsValidator {

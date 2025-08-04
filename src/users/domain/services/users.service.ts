@@ -1,5 +1,5 @@
 import { CreateUserDto } from '../../app/dtos/create-user.dto';
-import { User } from '../../../shared/shared-entities/entities/user.entity';
+import { User } from '../entities/user.entity';
 import { UserRepository } from 'src/users/infrastructure/user.repository';
 import { Injectable } from '@nestjs/common';
 import { CreateUserTransactionScript } from '../transaction-scripts/create-user-ts/create-user.transaction.script';
