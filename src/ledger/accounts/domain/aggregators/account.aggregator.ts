@@ -63,7 +63,7 @@ export class AccountAggregator {
     accountType: 'ASSET' | 'LIABILITY' | 'EQUITY' | 'REVENUE' | 'EXPENSE';
     isDefault?: boolean;
   }): Promise<Account> {
-    return this.createAccountTS.execute({
+    return await this.createAccountTS.execute({
       userId: data.ownerId,
       name: data.name,
       setAsDefault: data.isDefault || false,

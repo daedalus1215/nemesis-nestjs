@@ -16,7 +16,7 @@ export class CreateAccountTransactionScript {
   async execute(data: CreateAccountData): Promise<Account> {
     const account = await this.accountRepository.create({
       name: data.name,
-      isDefault: data.setAsDefault,
+      isDefault: false,
       ownerId: data.userId,
       accountType: data.accountType,
     });
