@@ -14,7 +14,7 @@ export class CreateAccountTransactionScript {
   constructor(private readonly accountRepository: AccountRepository) {}
 
   async execute(data: CreateAccountData): Promise<Account> {
-    const account = this.accountRepository.create({
+    const account = await this.accountRepository.create({
       name: data.name,
       isDefault: data.setAsDefault,
       ownerId: data.userId,
