@@ -40,7 +40,7 @@ export class AccountAggregator {
    * Get all accounts for a user
    */
   async getUserAccounts(userId: number): Promise<Account[]> {
-    return this.getUserAccountsTS.execute(userId);
+    return await this.getUserAccountsTS.execute(userId);
   }
 
   /**

@@ -12,7 +12,7 @@ export class AccountRepository implements AccountRepositoryPort {
   ) {}
 
   async findByUserId(userId: number): Promise<Account[]> {
-    return this.repository.find({
+    return await this.repository.find({
       where: { ownerId: userId },
       order: { isDefault: 'DESC', createdAt: 'ASC' },
     });

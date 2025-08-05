@@ -7,6 +7,6 @@ export class GetUserAccountsTransactionScript {
   constructor(private readonly accountRepository: AccountRepository) {}
 
   async execute(userId: number): Promise<Account[]> {
-    return this.accountRepository.findByUserId(userId);
+    return await this.accountRepository.findByUserId(userId);
   }
 }
