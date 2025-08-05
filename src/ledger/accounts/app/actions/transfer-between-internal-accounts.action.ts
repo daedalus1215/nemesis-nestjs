@@ -9,19 +9,19 @@ import { TransferBetweenAccountsDto } from '../dtos/requests/transfer-between-ac
 import { TransferResponseDto } from '../dtos/responses/transfer-response.dto';
 
 @Controller('accounts')
-export class TransferBetweenExternalAccountsAction {
+export class TransferBetweenInternalAccountsAction {
   constructor(private readonly ledgerService: LedgerService) {}
 
-  @Post('transfer')
+  @Post('transfer-internal')
   @ProtectedAction({
     tag: 'Account',
-    summary: 'Transfer between accounts',
+    summary: 'Transfer between internal accounts',
   })
   async handle(
     @Body() transferDto: TransferBetweenAccountsDto,
     @GetAuthUser() user: AuthUser,
   ): Promise<TransferResponseDto> {
-    const result = await this.ledgerService.transferBetweenExternalAccounts(
+    const result = await this.ledgerService.transferBetweenInternalAccounts(
       transferDto.fromAccountId,
       transferDto.toAccountId,
       transferDto.amount,

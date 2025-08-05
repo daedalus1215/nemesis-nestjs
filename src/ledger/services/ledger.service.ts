@@ -1,29 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { UserAggregator } from '../../users/domain/user.aggregator';
 import { AccountAggregator } from '../accounts/domain/aggregators/account.aggregator';
 import { TransactionAggregator } from '../../transactions/domain/aggregators/transaction.aggregator';
+import { AccountType } from '../accounts/constant';
 
 @Injectable()
 export class LedgerService {
   constructor(
-    private readonly userAggregator: UserAggregator,
     private readonly accountAggregator: AccountAggregator,
     private readonly transactionAggregator: TransactionAggregator,
   ) {}
 
-  /**
-   * Transfer money between accounts using direct orchestration
-   * This service coordinates across multiple bounded contexts via their aggregators
-   * No events needed - direct, synchronous, immediately consistent operations
-   */
-  async transferBetweenAccounts(
+
+async transferBetweenExternalAccounts(
     fromAccountId: number,
     toAccountId: number,
     amount: number,
     initiatingUserId: number,
     description?: string,
-  ): Promise<{ transactionId: string; success: boolean }> {
-    // 1. Validate accounts exist (direct aggregator calls)
+  ): Promise<{ transactionId: string; success: boolean }>  {
+
     const [fromAccount, toAccount] = await Promise.all([
       this.accountAggregator.getAccountById(fromAccountId, initiatingUserId),
       this.accountAggregator.getAccountByIdWithoutOwnershipCheck(toAccountId),
@@ -33,7 +28,6 @@ export class LedgerService {
       throw new Error('One or both accounts not found');
     }
 
-    // 2. Verify ownership (direct aggregator call)
     const hasPermission = await this.accountAggregator.verifyAccountOwnership(
       fromAccountId,
       initiatingUserId,
@@ -42,12 +36,10 @@ export class LedgerService {
       throw new Error('Unauthorized: You do not own the source account');
     }
 
-    // 3. Validate different accounts
     if (fromAccountId === toAccountId) {
       throw new Error('Cannot transfer to the same account');
     }
 
-    // 4. Check sufficient balance (direct aggregator call)
     const currentBalance =
       await this.transactionAggregator.getAccountBalance(fromAccountId);
     if (currentBalance < amount) {
@@ -56,7 +48,6 @@ export class LedgerService {
       );
     }
 
-    // 5. Create the transaction (direct aggregator call)
     const transaction =
       await this.transactionAggregator.createDoubleEntryTransaction({
         debitAccountId: fromAccountId,
@@ -70,7 +61,53 @@ export class LedgerService {
         counterpartyUserId: toAccount.ownerId,
       });
 
-    // 6. Complete the transaction
+    const completedTransaction =
+      await this.transactionAggregator.completeTransaction(transaction.id);
+
+    return {
+      transactionId: completedTransaction.id,
+      success: true,
+    };
+    }
+
+  async transferBetweenInternalAccounts(
+    fromAccountId: number,
+    toAccountId: number,
+    amount: number,
+    initiatingUserId: number,
+    description?: string,
+  ): Promise<{ transactionId: string; success: boolean }> {
+
+    const [fromAccount, toAccount] = await Promise.all([
+      this.accountAggregator.getAccountById(fromAccountId, initiatingUserId),
+      this.accountAggregator.getAccountById(toAccountId, initiatingUserId),
+    ]);
+
+    if (!fromAccount || !toAccount) {
+      throw new Error('One or both accounts not found');
+    }
+
+    const currentBalance =
+      await this.transactionAggregator.getAccountBalance(fromAccountId);
+    if (currentBalance < amount) {
+      throw new Error(
+        `Insufficient funds. Current balance: ${currentBalance}, Required: ${amount}`,
+      );
+    }
+
+    const transaction =
+      await this.transactionAggregator.createDoubleEntryTransaction({
+        debitAccountId: fromAccountId,
+        creditAccountId: toAccountId,
+        amount,
+        description:
+          description ||
+          `Transfer from account ${fromAccountId} to ${toAccountId}`,
+        category: 'transfer',
+        initiatingUserId,
+        counterpartyUserId: toAccount.ownerId,
+      });
+
     const completedTransaction =
       await this.transactionAggregator.completeTransaction(transaction.id);
 
@@ -98,12 +135,7 @@ export class LedgerService {
   async createAccountForUser(
     userId: number,
     accountName: string,
-    accountType:
-      | 'ASSET'
-      | 'LIABILITY'
-      | 'EQUITY'
-      | 'REVENUE'
-      | 'EXPENSE' = 'ASSET',
+    accountType:AccountType = 'ASSET',
   ): Promise<{ accountId: number; isDefault: boolean }> {
     const existingAccounts =
       await this.accountAggregator.getUserAccounts(userId);

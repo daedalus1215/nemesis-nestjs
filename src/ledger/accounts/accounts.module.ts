@@ -17,7 +17,8 @@ import { SetDefaultAccountAction } from './app/actions/set-default-account.actio
 import { GetUserBalanceAction } from './app/actions/get-user-balance.action';
 import { GetAccountBalanceAction } from './app/actions/get-account-balance.action';
 import { GetFinancialSummaryAction } from './app/actions/get-financial-summary.action';
-import { TransferBetweenAccountsAction } from './app/actions/transfer-between-accounts.action';
+import { TransferBetweenExternalAccountsAction } from './app/actions/transfer-between-accounts.action';
+import { TransferBetweenInternalAccountsAction } from './app/actions/transfer-between-internal-accounts.action';
 import { GetAccountTransactionHistoryAction } from './app/actions/get-account-transaction-history.action';
 import { SeedMoneyAction } from './app/actions/seed-money.action';
 import { LedgerService } from '../services/ledger.service';
@@ -60,7 +61,8 @@ import { GetAccountByIdWithoutOwnershipTransactionScript } from './domain/transa
     GetUserBalanceAction,
     GetAccountBalanceAction,
     GetFinancialSummaryAction,
-    TransferBetweenAccountsAction,
+    TransferBetweenExternalAccountsAction,
+    TransferBetweenInternalAccountsAction,
     GetAccountTransactionHistoryAction,
     SeedMoneyAction,
   ],
