@@ -70,6 +70,35 @@ async transferBetweenExternalAccounts(
     };
     }
 
+  async transferBetweenUsers(
+    fromUserId: number,
+    toUserId: number,
+    amount: number,
+    initiatingUserId: number,
+    description?: string,
+  ): Promise<{ transactionId: string; success: boolean; fromAccountId: number; toAccountId: number }> {
+    // Get the sender's default account (creating one if needed)
+    const fromAccount = await this.accountAggregator.getDefaultAccountForUser(fromUserId);
+    
+    // Get the recipient's default account (creating one if needed)
+    const toAccount = await this.accountAggregator.getDefaultAccountForUser(toUserId);
+
+    // Call the existing transferBetweenExternalAccounts method
+    const result = await this.transferBetweenExternalAccounts(
+      fromAccount.id,
+      toAccount.id,
+      amount,
+      initiatingUserId,
+      description,
+    );
+
+    return {
+      ...result,
+      fromAccountId: fromAccount.id,
+      toAccountId: toAccount.id,
+    };
+  }
+
   async transferBetweenInternalAccounts(
     fromAccountId: number,
     toAccountId: number,

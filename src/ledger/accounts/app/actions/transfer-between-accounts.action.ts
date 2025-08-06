@@ -5,25 +5,27 @@ import {
 } from '../../../../auth/app/decorators/get-auth-user.decorator';
 import { LedgerService } from '../../../services/ledger.service';
 import { ProtectedAction } from '../../../../shared/shared-entities/application/protected-action-options';
-import { TransferBetweenAccountsDto } from '../dtos/requests/transfer-between-accounts.dto';
+import { TransferBetweenUsersDto } from '../dtos/requests/transfer-between-users.dto';
 import { TransferResponseDto } from '../dtos/responses/transfer-response.dto';
 
 @Controller('accounts')
 export class TransferBetweenExternalAccountsAction {
-  constructor(private readonly ledgerService: LedgerService) {}
+  constructor(
+    private readonly ledgerService: LedgerService,
+  ) {}
 
   @Post('transfer')
   @ProtectedAction({
     tag: 'Account',
-    summary: 'Transfer between accounts',
+    summary: 'Transfer between users default accounts',
   })
   async handle(
-    @Body() transferDto: TransferBetweenAccountsDto,
+    @Body() transferDto: TransferBetweenUsersDto,
     @GetAuthUser() user: AuthUser,
   ): Promise<TransferResponseDto> {
-    const result = await this.ledgerService.transferBetweenExternalAccounts(
-      transferDto.fromAccountId,
-      transferDto.toAccountId,
+    const result = await this.ledgerService.transferBetweenUsers(
+      user.userId,
+      transferDto.toUserId,
       transferDto.amount,
       user.userId,
       transferDto.description,
@@ -31,8 +33,8 @@ export class TransferBetweenExternalAccountsAction {
 
     return {
       transactionId: result.transactionId,
-      fromAccountId: transferDto.fromAccountId,
-      toAccountId: transferDto.toAccountId,
+      fromAccountId: result.fromAccountId,
+      toAccountId: result.toAccountId,
       amount: transferDto.amount,
       description: transferDto.description,
       success: result.success,
