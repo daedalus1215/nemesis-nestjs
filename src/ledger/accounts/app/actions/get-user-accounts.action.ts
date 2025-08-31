@@ -16,12 +16,14 @@ export class GetUserAccountsAction {
     tag: 'Account',
     summary: 'Get user accounts',
   })
-  async handle(@GetAuthUser() user: AuthUser): Promise<UserAccountsResponseDto> {
+  async handle(
+    @GetAuthUser() user: AuthUser,
+  ): Promise<UserAccountsResponseDto> {
     const accounts = await this.accountAggregator.getUserAccounts(user.userId);
 
     //@TODO: Move to a Responder.
     return {
-      accounts: accounts.map(account => ({
+      accounts: accounts.map((account) => ({
         id: account.id,
         name: account.name,
         accountType: account.accountType,

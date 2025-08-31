@@ -24,7 +24,7 @@ export class AccountService {
   }
 
   async getDefaultAccount(userId: number): Promise<Account | null> {
-    return this.accountRepository.findDefaultByUserId(userId);    
+    return this.accountRepository.findDefaultByUserId(userId);
   }
 
   async getAccountById(

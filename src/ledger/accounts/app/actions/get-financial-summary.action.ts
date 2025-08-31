@@ -16,8 +16,12 @@ export class GetFinancialSummaryAction {
     tag: 'Account',
     summary: 'Get financial summary',
   })
-  async handle(@GetAuthUser() user: AuthUser): Promise<FinancialSummaryResponseDto> {
-    const summary = await this.ledgerService.getUserFinancialSummary(user.userId);
+  async handle(
+    @GetAuthUser() user: AuthUser,
+  ): Promise<FinancialSummaryResponseDto> {
+    const summary = await this.ledgerService.getUserFinancialSummary(
+      user.userId,
+    );
 
     return {
       ...summary,

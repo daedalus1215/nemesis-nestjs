@@ -10,15 +10,13 @@ export class LedgerService {
     private readonly transactionAggregator: TransactionAggregator,
   ) {}
 
-
-async transferBetweenExternalAccounts(
+  async transferBetweenExternalAccounts(
     fromAccountId: number,
     toAccountId: number,
     amount: number,
     initiatingUserId: number,
     description?: string,
-  ): Promise<{ transactionId: string; success: boolean }>  {
-
+  ): Promise<{ transactionId: string; success: boolean }> {
     const [fromAccount, toAccount] = await Promise.all([
       this.accountAggregator.getAccountById(fromAccountId, initiatingUserId),
       this.accountAggregator.getAccountByIdWithoutOwnershipCheck(toAccountId),
@@ -68,7 +66,7 @@ async transferBetweenExternalAccounts(
       transactionId: completedTransaction.id,
       success: true,
     };
-    }
+  }
 
   async transferBetweenUsers(
     fromUserId: number,
@@ -76,12 +74,19 @@ async transferBetweenExternalAccounts(
     amount: number,
     initiatingUserId: number,
     description?: string,
-  ): Promise<{ transactionId: string; success: boolean; fromAccountId: number; toAccountId: number }> {
+  ): Promise<{
+    transactionId: string;
+    success: boolean;
+    fromAccountId: number;
+    toAccountId: number;
+  }> {
     // Get the sender's default account (creating one if needed)
-    const fromAccount = await this.accountAggregator.getDefaultAccountForUser(fromUserId);
-    
+    const fromAccount =
+      await this.accountAggregator.getDefaultAccountForUser(fromUserId);
+
     // Get the recipient's default account (creating one if needed)
-    const toAccount = await this.accountAggregator.getDefaultAccountForUser(toUserId);
+    const toAccount =
+      await this.accountAggregator.getDefaultAccountForUser(toUserId);
 
     // Call the existing transferBetweenExternalAccounts method
     const result = await this.transferBetweenExternalAccounts(
@@ -106,7 +111,6 @@ async transferBetweenExternalAccounts(
     initiatingUserId: number,
     description?: string,
   ): Promise<{ transactionId: string; success: boolean }> {
-
     const [fromAccount, toAccount] = await Promise.all([
       this.accountAggregator.getAccountById(fromAccountId, initiatingUserId),
       this.accountAggregator.getAccountById(toAccountId, initiatingUserId),
@@ -154,7 +158,9 @@ async transferBetweenExternalAccounts(
     const accounts = await this.accountAggregator.getUserAccounts(userId);
 
     const balances = await Promise.all(
-      accounts.map(account => this.transactionAggregator.getAccountBalance(account.id))
+      accounts.map((account) =>
+        this.transactionAggregator.getAccountBalance(account.id),
+      ),
     );
     const totalBalance = balances.reduce((sum, balance) => sum + balance, 0);
 
@@ -164,7 +170,7 @@ async transferBetweenExternalAccounts(
   async createAccountForUser(
     userId: number,
     accountName: string,
-    accountType:AccountType = 'ASSET',
+    accountType: AccountType = 'ASSET',
   ): Promise<{ accountId: number; isDefault: boolean }> {
     const existingAccounts =
       await this.accountAggregator.getUserAccounts(userId);

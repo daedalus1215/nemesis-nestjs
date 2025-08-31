@@ -14,20 +14,21 @@ export class SeedMoneyAction {
 
   @Post('seed-money')
   @HttpCode(HttpStatus.OK)
-
   async handle(@Body() dto: SeedMoneyDto) {
     const { userId, amount, description = 'Initial seed money' } = dto;
 
-    const userAccount = await this.accountAggregator.getDefaultAccountForUser(userId);
+    const userAccount =
+      await this.accountAggregator.getDefaultAccountForUser(userId);
 
-    const transaction = await this.transactionService.createValidatedTransaction({
-      debitAccountId: this.systemAccountService.getSystemAccountId(), 
-      creditAccountId: userAccount.id, 
-      amount,
-      description,
-      category: 'adjustment', // Use valid category for seed money
-      initiatingUserId: userId,
-    });
+    const transaction =
+      await this.transactionService.createValidatedTransaction({
+        debitAccountId: this.systemAccountService.getSystemAccountId(),
+        creditAccountId: userAccount.id,
+        amount,
+        description,
+        category: 'adjustment', // Use valid category for seed money
+        initiatingUserId: userId,
+      });
 
     return {
       success: true,

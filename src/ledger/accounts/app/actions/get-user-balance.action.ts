@@ -17,7 +17,9 @@ export class GetUserBalanceAction {
     summary: 'Get user balance',
   })
   async handle(@GetAuthUser() user: AuthUser): Promise<UserBalanceResponseDto> {
-    const totalBalance = await this.ledgerService.getUserTotalBalance(user.userId);
+    const totalBalance = await this.ledgerService.getUserTotalBalance(
+      user.userId,
+    );
 
     return {
       totalBalance,

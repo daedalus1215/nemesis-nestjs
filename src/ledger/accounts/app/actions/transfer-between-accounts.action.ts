@@ -10,9 +10,7 @@ import { TransferResponseDto } from '../dtos/responses/transfer-response.dto';
 
 @Controller('accounts')
 export class TransferBetweenExternalAccountsAction {
-  constructor(
-    private readonly ledgerService: LedgerService,
-  ) {}
+  constructor(private readonly ledgerService: LedgerService) {}
 
   @Post('transfer')
   @ProtectedAction({

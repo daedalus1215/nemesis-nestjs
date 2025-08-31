@@ -29,6 +29,7 @@ import { CreateAccountTransactionScript } from './domain/transaction-scripts/cre
 import { SetDefaultAccountTransactionScript } from './domain/transaction-scripts/set-default-account-TS/set-default-account.transaction.script';
 import { EnsureUserHasDefaultAccountInvariant } from './domain/invariants/ensure-user-has-default-account-invariant/ensure-user-has-default-account.invariant';
 import { GetAccountByIdWithoutOwnershipTransactionScript } from './domain/transaction-scripts/get-account-by-id-without-ownership-TS/get-account-by-id-without-ownership.transaction.script';
+import { GetUserAccountByIdAction } from './app/actions/get-account-by-id-action/get-account-by-id.action';
 
 @Module({
   imports: [
@@ -50,9 +51,9 @@ import { GetAccountByIdWithoutOwnershipTransactionScript } from './domain/transa
     AccountAggregator,
     TransactionAggregator,
     TransactionService, // Added for SeedMoneyAction
-    AccountBalanceService, 
+    AccountBalanceService,
     SystemAccountService, // Added for system account management
-    LedgerService, 
+    LedgerService,
   ],
   controllers: [
     CreateAccountAction,
@@ -60,6 +61,7 @@ import { GetAccountByIdWithoutOwnershipTransactionScript } from './domain/transa
     SetDefaultAccountAction,
     GetUserBalanceAction,
     GetAccountBalanceAction,
+    GetUserAccountByIdAction,
     GetFinancialSummaryAction,
     TransferBetweenExternalAccountsAction,
     TransferBetweenInternalAccountsAction,

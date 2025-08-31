@@ -12,6 +12,7 @@ import { AccountTransactionHistoryResponseDto } from '../dtos/responses/account-
 export class GetAccountTransactionHistoryAction {
   constructor(private readonly ledgerService: LedgerService) {}
 
+
   @Get(':accountId/transactions')
   @ProtectedAction({
     tag: 'Account',
@@ -34,4 +35,5 @@ export class GetAccountTransactionHistoryAction {
       success: true,
     };
   }
+
 }

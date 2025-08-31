@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
-import { LedgerService } from './services/ledger.service';
 import { UsersModule } from '../users/users.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { TransactionsModule } from '../transactions/transactions.module';
 
 @Module({
   imports: [
-    UsersModule,      // For UserAggregator
-    AccountsModule,   // For AccountAggregator and controllers
+    UsersModule, // For UserAggregator
+    AccountsModule, // For AccountAggregator and controllers
     TransactionsModule, // For TransactionAggregator
   ],
   controllers: [
