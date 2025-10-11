@@ -5,7 +5,7 @@ import {
 } from 'src/auth/app/decorators/get-auth-user.decorator';
 import { UserAccountByIdResponseDto } from '../../dtos/responses/user-accounts-response.dto';
 import { AccountService } from 'src/ledger/accounts/domain/services/account-service/account.service';
-import { ProtectedAction } from 'src/shared/shared-entities/application/protected-action-options';
+import { ProtectedAction } from 'src/shared/application/protected-action-options';
 
 @Controller('accounts')
 export class GetUserAccountByIdAction {

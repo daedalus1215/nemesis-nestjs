@@ -3,7 +3,7 @@ import {
   AuthUser,
   GetAuthUser,
 } from '../../../../auth/app/decorators/get-auth-user.decorator';
-import { ProtectedAction } from '../../../../shared/shared-entities/application/protected-action-options';
+import { ProtectedAction } from '../../../../shared/application/protected-action-options';
 import { LedgerService } from '../../../services/ledger.service';
 import { GetTransactionHistoryQueryDto } from '../dtos/requests/get-transaction-history-query.dto';
 import { AccountTransactionHistoryResponseDto } from '../dtos/responses/account-transaction-history-response.dto';

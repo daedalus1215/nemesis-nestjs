@@ -4,7 +4,7 @@ import {
   GetAuthUser,
 } from '../../../../auth/app/decorators/get-auth-user.decorator';
 import { LedgerService } from '../../../services/ledger.service';
-import { ProtectedAction } from '../../../../shared/shared-entities/application/protected-action-options';
+import { ProtectedAction } from '../../../../shared/application/protected-action-options';
 import { TransferBetweenUsersDto } from '../dtos/requests/transfer-between-users.dto';
 import { TransferResponseDto } from '../dtos/responses/transfer-response.dto';
 

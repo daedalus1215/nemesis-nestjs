@@ -4,7 +4,7 @@ import { UsersService } from 'src/users/domain/services/users.service';
 import { GetUserConverter } from './get-user.converter';
 import { GetUserDto } from './dtos/responses/get-user.dto';
 import { GetUsersSwagger } from './get-user.swagger';
-import { ProtectedAction } from 'src/shared/shared-entities/application/protected-action-options';
+import { ProtectedAction } from 'src/shared/application/protected-action-options';
 
 @ApiTags('users') // Tagging the controller for Swagger
 @Controller('users')

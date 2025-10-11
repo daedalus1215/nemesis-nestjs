@@ -3,7 +3,7 @@ import {
   AuthUser,
   GetAuthUser,
 } from '../../../../auth/app/decorators/get-auth-user.decorator';
-import { ProtectedAction } from '../../../../shared/shared-entities/application/protected-action-options';
+import { ProtectedAction } from '../../../../shared/application/protected-action-options';
 import { AccountBalanceResponseDto } from '../dtos/responses/account-balance-response.dto';
 import { AccountBalanceService } from '../../domain/services/account-balance.service';
 
