@@ -2,10 +2,10 @@ import { Controller, Put, Param, ParseIntPipe } from '@nestjs/common';
 import {
   AuthUser,
   GetAuthUser,
-} from '../../../../auth/app/decorators/get-auth-user.decorator';
-import { ProtectedAction } from '../../../../shared/application/protected-action-options';
-import { AccountAggregator } from '../../domain/aggregators/account.aggregator';
-import { SuccessResponseDto } from '../dtos/responses/success-response.dto';
+} from '../../../../../auth/app/decorators/get-auth-user.decorator';
+import { ProtectedAction } from '../../../../../shared/application/protected-action-options';
+import { AccountAggregator } from '../../../domain/aggregators/account.aggregator';
+import { SetDefaultAccountResponseDto } from './set-default-account.response.dto';
 
 @Controller('accounts')
 export class SetDefaultAccountAction {
@@ -19,7 +19,7 @@ export class SetDefaultAccountAction {
   async handle(
     @Param('accountId', ParseIntPipe) accountId: number,
     @GetAuthUser() user: AuthUser,
-  ): Promise<SuccessResponseDto> {
+  ): Promise<SetDefaultAccountResponseDto> {
     await this.accountAggregator.setAsDefault(accountId, user.userId);
 
     return {

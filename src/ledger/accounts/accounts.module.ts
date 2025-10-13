@@ -11,14 +11,13 @@ import { UsersModule } from '../../users/users.module';
 import { PaymentAggregator } from '../../payments/domain/aggregators/payment.aggregator';
 import { PaymentRepository } from '../../payments/infra/repositories/payment.repository';
 import { PaymentService } from '../../payments/domain/services/payment.service';
-import { CreateAccountAction } from './app/actions/create-account.action';
-import { GetUserAccountsAction } from './app/actions/get-user-accounts.action';
-import { SetDefaultAccountAction } from './app/actions/set-default-account.action';
-import { GetUserBalanceAction } from './app/actions/get-user-balance.action';
-import { GetAccountBalanceAction } from './app/actions/get-account-balance.action';
-import { TransferBetweenExternalAccountsAction } from './app/actions/transfer-between-accounts.action';
-import { TransferBetweenInternalAccountsAction } from './app/actions/transfer-between-internal-accounts.action';
-import { GetAccountPaymentHistoryAction } from './app/actions/get-account-payment-history.action';
+import { CreateAccountAction } from './app/actions/create-account-action/create-account.action';
+import { GetUserAccountsAction } from './app/actions/fetch-user-accounts-action/fetch-user-accounts.action';
+import { SetDefaultAccountAction } from './app/actions/set-default-account-action/set-default-account.action';
+import { GetUserBalanceAction } from './app/actions/fetch-user-balance-action/get-user-balance.action';
+import { FetchAccountBalanceAction } from './app/actions/fetch-account-balance-action/fetch-account-balance.action';
+import { TransferBetweenExternalAccountsAction } from './app/actions/transfer-between-external-accounts-action/transfer-between-external-accounts.action';
+import { FetchAccountPaymentHistoryAction } from './app/actions/fetch-account-payment-history-action/fetch-account-payment-history.action';
 import { LedgerService } from '../services/ledger.service';
 // Transaction Scripts
 import { GetUserAccountsTransactionScript } from './domain/transaction-scripts/get-user-accounts-TS/get-user-accounts.transaction.script';
@@ -27,7 +26,8 @@ import { CreateAccountTransactionScript } from './domain/transaction-scripts/cre
 import { SetDefaultAccountTransactionScript } from './domain/transaction-scripts/set-default-account-TS/set-default-account.transaction.script';
 import { EnsureUserHasDefaultAccountInvariant } from './domain/invariants/ensure-user-has-default-account-invariant/ensure-user-has-default-account.invariant';
 import { GetAccountByIdWithoutOwnershipTransactionScript } from './domain/transaction-scripts/get-account-by-id-without-ownership-TS/get-account-by-id-without-ownership.transaction.script';
-import { GetUserAccountByIdAction } from './app/actions/get-account-by-id-action/get-account-by-id.action';
+import { FetchUserAccountByIdAction } from './app/actions/fetch-account-by-id-action/fetch-account-by-id.action';
+import { TransferBetweenInternalAccountsAction } from './app/actions/transfer-between-internal-accounts-action/transfer-between-internal-accounts.action';
 
 @Module({
   imports: [
@@ -58,11 +58,11 @@ import { GetUserAccountByIdAction } from './app/actions/get-account-by-id-action
     GetUserAccountsAction,
     SetDefaultAccountAction,
     GetUserBalanceAction,
-    GetAccountBalanceAction,
-    GetUserAccountByIdAction,
+    FetchAccountBalanceAction,
+    FetchUserAccountByIdAction,
     TransferBetweenExternalAccountsAction,
     TransferBetweenInternalAccountsAction,
-    GetAccountPaymentHistoryAction,
+    FetchAccountPaymentHistoryAction,
   ],
   exports: [AccountAggregator, LedgerService],
 })

@@ -1,6 +1,6 @@
 import { IsNumber, IsPositive, IsOptional, IsString, IsInt } from 'class-validator';
 
-export class TransferBetweenAccountsDto {
+export class TransferBetweenExternalAccountsRequestDto {
   @IsInt()
   @IsPositive()
   fromAccountId: number;

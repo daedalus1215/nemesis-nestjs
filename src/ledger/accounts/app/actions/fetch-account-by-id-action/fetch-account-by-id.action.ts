@@ -3,12 +3,12 @@ import {
   AuthUser,
   GetAuthUser,
 } from 'src/auth/app/decorators/get-auth-user.decorator';
-import { UserAccountByIdResponseDto } from '../../dtos/responses/user-accounts-response.dto';
+import { FetchAccountByIdResponseDto } from './fetch-account-by-id.response.dto';
 import { AccountService } from 'src/ledger/accounts/domain/services/account-service/account.service';
 import { ProtectedAction } from 'src/shared/application/protected-action-options';
 
 @Controller('accounts')
-export class GetUserAccountByIdAction {
+export class FetchUserAccountByIdAction {
   constructor(private readonly accountService: AccountService) {}
 
   @Get('detail/:accountId')
@@ -19,7 +19,7 @@ export class GetUserAccountByIdAction {
   async handle(
     @Param('accountId', ParseIntPipe) accountId: number,
     @GetAuthUser() user: AuthUser,
-  ): Promise<UserAccountByIdResponseDto> {
+  ): Promise<FetchAccountByIdResponseDto> {
     const account = await this.accountService.getAccountById(
       accountId,
       user.userId,

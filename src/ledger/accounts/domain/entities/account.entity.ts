@@ -1,6 +1,16 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { IsString, IsNotEmpty, IsBoolean, IsNumber, IsEnum, Length, IsOptional, IsDate } from 'class-validator';
 
+export const ACCOUNT_TYPE = {
+  ASSET: 'ASSET',
+  LIABILITY: 'LIABILITY',
+  EQUITY: 'EQUITY',
+  REVENUE: 'REVENUE',
+  EXPENSE: 'EXPENSE',
+} as const;
+
+export type AccountType = typeof ACCOUNT_TYPE[keyof typeof ACCOUNT_TYPE];
+
 @Entity()
 export class Account {
   @PrimaryGeneratedColumn({ type: 'int' })
@@ -25,12 +35,12 @@ export class Account {
   @Column({
     type: 'varchar',
     length: 20,
-    default: 'ASSET',
+    default: ACCOUNT_TYPE.ASSET,
   })
-  @IsEnum(['ASSET', 'LIABILITY', 'EQUITY', 'REVENUE', 'EXPENSE'], {
+  @IsEnum(Object.values(ACCOUNT_TYPE), {
     message: 'Account type must be one of: ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE'
   })
-  accountType: 'ASSET' | 'LIABILITY' | 'EQUITY' | 'REVENUE' | 'EXPENSE';
+  accountType: AccountType;
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   @IsDate()

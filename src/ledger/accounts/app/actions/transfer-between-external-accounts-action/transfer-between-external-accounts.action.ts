@@ -2,15 +2,15 @@ import { Body, Controller, Post } from '@nestjs/common';
 import {
   AuthUser,
   GetAuthUser,
-} from '../../../../auth/app/decorators/get-auth-user.decorator';
-import { LedgerService } from '../../../services/ledger.service';
-import { ProtectedAction } from '../../../../shared/application/protected-action-options';
-import { TransferBetweenUsersDto } from '../dtos/requests/transfer-between-users.dto';
-import { TransferResponseDto } from '../dtos/responses/transfer-response.dto';
+} from '../../../../../auth/app/decorators/get-auth-user.decorator';
+import { LedgerService } from '../../../../services/ledger.service';
+import { ProtectedAction } from '../../../../../shared/application/protected-action-options';
+import { TransferBetweenUsersDto } from '../transfer-between-internal-accounts-action/transfer-between-internal-accounts.request.dto';
+import { TransferBetweenExternalAccountsResponseDto } from './transfer-between-external-accounts.response.dto';
 
 @Controller('accounts')
 export class TransferBetweenExternalAccountsAction {
-  constructor(private readonly ledgerService: LedgerService) {}
+  constructor(private readonly ledgerService: LedgerService) { }
 
   @Post('transfer')
   @ProtectedAction({
@@ -20,7 +20,7 @@ export class TransferBetweenExternalAccountsAction {
   async handle(
     @Body() transferDto: TransferBetweenUsersDto,
     @GetAuthUser() user: AuthUser,
-  ): Promise<TransferResponseDto> {
+  ): Promise<TransferBetweenExternalAccountsResponseDto> {
     const result = await this.ledgerService.transferBetweenUsers(
       user.userId,
       transferDto.toUserId,

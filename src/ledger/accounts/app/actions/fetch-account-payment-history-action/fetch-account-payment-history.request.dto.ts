@@ -1,7 +1,7 @@
 import { IsOptional, IsInt, IsPositive, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 
-export class GetTransactionHistoryQueryDto {
+export class FetchPaymentHistoryRequestDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()

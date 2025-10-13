@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { Account } from '../../entities/account.entity';
+import { Account, AccountType } from '../../entities/account.entity';
 import { AccountRepository } from '../../../infra/repositories/account.repository';
 
 export type CreateAccountData = {
   userId: number;
   name: string;
   setAsDefault: boolean;
-  accountType: 'ASSET' | 'LIABILITY' | 'EQUITY' | 'REVENUE' | 'EXPENSE';
+  accountType: AccountType;
 };
 
 @Injectable()

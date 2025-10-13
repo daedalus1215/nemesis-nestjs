@@ -11,7 +11,7 @@ export const PaymentCategory = {
   ADJUSTMENT: 'ADJUSTMENT',
 } as const;
 
-export type PaymentCategoryType = keyof typeof PaymentCategory;
+export type PaymentCategoryType = typeof PaymentCategory[keyof typeof PaymentCategory];
 export const PaymentStatus = {
   PENDING: 'PENDING',
   COMPLETED: 'COMPLETED',
@@ -19,7 +19,7 @@ export const PaymentStatus = {
   REFUNDED: 'REFUNDED',
   VOID: 'VOID',
 } as const;
-export type PaymentStatusType = keyof typeof PaymentStatus;
+export type PaymentStatusType = typeof PaymentStatus[keyof typeof PaymentStatus];
 
 @Entity({ name: 'payments' })
 export class Payment {

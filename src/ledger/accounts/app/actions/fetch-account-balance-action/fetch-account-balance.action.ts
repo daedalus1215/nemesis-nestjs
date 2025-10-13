@@ -2,13 +2,13 @@ import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
 import {
   AuthUser,
   GetAuthUser,
-} from '../../../../auth/app/decorators/get-auth-user.decorator';
-import { ProtectedAction } from '../../../../shared/application/protected-action-options';
-import { AccountBalanceResponseDto } from '../dtos/responses/account-balance-response.dto';
-import { AccountBalanceService } from '../../domain/services/account-balance.service';
+} from '../../../../../auth/app/decorators/get-auth-user.decorator';
+import { ProtectedAction } from '../../../../../shared/application/protected-action-options';
+import { FetchAccountBalanceResponseDto } from './account-balance.response.dto';
+import { AccountBalanceService } from '../../../domain/services/account-balance.service';
 
 @Controller('accounts')
-export class GetAccountBalanceAction {
+export class FetchAccountBalanceAction {
   constructor(private readonly accountBalanceService: AccountBalanceService) {}
 
   @Get(':accountId/balance')
@@ -19,7 +19,7 @@ export class GetAccountBalanceAction {
   async handle(
     @Param('accountId', ParseIntPipe) accountId: number,
     @GetAuthUser() user: AuthUser,
-  ): Promise<AccountBalanceResponseDto> {
+  ): Promise<FetchAccountBalanceResponseDto> {
     const balance = await this.accountBalanceService.getValidatedAccountBalance(
       accountId,
       user.userId,
