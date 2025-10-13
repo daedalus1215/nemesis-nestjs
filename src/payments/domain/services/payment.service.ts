@@ -1,26 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import {
-  TransactionAggregator,
-  CreateTransactionData,
-} from '../aggregators/transaction.aggregator';
-import { Transaction } from '../entities/transaction.entity';
+  PaymentAggregator,
+  CreatePaymentCommand,
+} from '../aggregators/payment.aggregator';
+import { Payment, PaymentCategory } from '../entities/payment.entity';
 import { AccountAggregator } from '../../../ledger/accounts/domain/aggregators/account.aggregator';
 
 @Injectable()
-export class TransactionService {
+export class PaymentService {
   constructor(
-    private readonly transactionAggregator: TransactionAggregator,
-    private readonly accountAggregator: AccountAggregator, // ✅ Service can use external aggregators
-  ) {}
+    private readonly paymentAggregator: PaymentAggregator,
+    private readonly accountAggregator: AccountAggregator,
+  ) { }
 
-  /**
-   * Create a validated double-entry transaction
-   * This service adds cross-context validation that the aggregator cannot do
-   */
-  async createValidatedTransaction(
-    data: CreateTransactionData,
-  ): Promise<Transaction> {
-    // 1. Validate both accounts exist (cross-context validation)
+  async createValidatedPayment(
+    data: CreatePaymentCommand,
+  ): Promise<Payment> {
     const [debitAccount, creditAccount] = await Promise.all([
       this.accountAggregator.getAccountByIdWithoutOwnershipCheck(
         data.debitAccountId,
@@ -38,7 +33,7 @@ export class TransactionService {
       throw new Error(`Credit account ${data.creditAccountId} not found`);
     }
 
-    const currentBalance = await this.transactionAggregator.getAccountBalance(
+    const currentBalance = await this.paymentAggregator.getAccountBalance(
       data.debitAccountId,
     );
     if (currentBalance < data.amount) {
@@ -47,12 +42,7 @@ export class TransactionService {
       );
     }
 
-    // 3. Create the transaction (delegation to aggregator)
-    const transaction =
-      await this.transactionAggregator.createDoubleEntryTransaction(data);
-
-    // 4. Complete the transaction immediately (for simple transfers)
-    return this.transactionAggregator.completeTransaction(transaction.id);
+    return this.paymentAggregator.completePayment((await this.paymentAggregator.createInitialPayment(data)).id);
   }
 
   async getValidatedAccountBalance(
@@ -69,7 +59,7 @@ export class TransactionService {
       );
     }
 
-    return this.transactionAggregator.getAccountBalance(accountId);
+    return this.paymentAggregator.getAccountBalance(accountId);
   }
 
   /**
@@ -81,8 +71,8 @@ export class TransactionService {
     amount: number,
     initiatingUserId: number,
     description?: string,
-  ): Promise<Transaction> {
-    // Get account details for additional validation
+  ): Promise<Payment> {
+    //@TODO: Move to using the nestJS emitter to retrieve this data
     const [fromAccount, toAccount] = await Promise.all([
       this.accountAggregator.getAccountById(fromAccountId, initiatingUserId),
       this.accountAggregator.getAccountByIdWithoutOwnershipCheck(toAccountId),
@@ -92,7 +82,7 @@ export class TransactionService {
       throw new Error('One or both accounts not found');
     }
 
-    // Verify ownership of source account
+    //@TODO: Move to using the nestJS emitter to retrieve this data
     const hasPermission = await this.accountAggregator.verifyAccountOwnership(
       fromAccountId,
       initiatingUserId,
@@ -102,15 +92,14 @@ export class TransactionService {
       throw new Error('Unauthorized: You do not own the source account');
     }
 
-    // Create the validated transaction
-    return this.createValidatedTransaction({
+    return this.createValidatedPayment({
       debitAccountId: fromAccountId,
       creditAccountId: toAccountId,
       amount,
       description:
         description ||
         `Transfer from account ${fromAccountId} to account ${toAccountId}`,
-      category: 'transfer',
+      category: PaymentCategory.POS,
       initiatingUserId,
       counterpartyUserId: toAccount.ownerId,
     });

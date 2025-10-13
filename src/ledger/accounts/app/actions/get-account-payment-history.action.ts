@@ -9,7 +9,7 @@ import { GetTransactionHistoryQueryDto } from '../dtos/requests/get-transaction-
 import { AccountTransactionHistoryResponseDto } from '../dtos/responses/account-transaction-history-response.dto';
 
 @Controller('accounts')
-export class GetAccountTransactionHistoryAction {
+export class GetAccountPaymentHistoryAction {
   constructor(private readonly ledgerService: LedgerService) {}
 
 
@@ -23,7 +23,7 @@ export class GetAccountTransactionHistoryAction {
     @Query() query: GetTransactionHistoryQueryDto,
     @GetAuthUser() user: AuthUser,
   ): Promise<AccountTransactionHistoryResponseDto> {
-    const result = await this.ledgerService.getAccountTransactionHistory(
+    const result = await this.ledgerService.getAccountPaymentHistory(
       accountId,
       user.userId,
       query.limit || 50,
@@ -31,7 +31,8 @@ export class GetAccountTransactionHistoryAction {
     );
 
     return {
-      ...result,
+     ...result,
+      transactions: result.payments,
       success: true,
     };
   }

@@ -30,7 +30,7 @@ export class TransferBetweenExternalAccountsAction {
     );
 
     return {
-      transactionId: result.transactionId,
+      transactionId: result.paymentId,
       fromAccountId: result.fromAccountId,
       toAccountId: result.toAccountId,
       amount: transferDto.amount,

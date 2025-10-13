@@ -30,7 +30,7 @@ export class TransferBetweenInternalAccountsAction {
     );
 
     return {
-      transactionId: result.transactionId,
+      transactionId: result.paymentId,
       fromAccountId: transferDto.fromAccountId,
       toAccountId: transferDto.toAccountId,
       amount: transferDto.amount,

@@ -1,28 +1,52 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
-export class Transaction {
+
+export const PaymentCategory = {
+  POS: 'POS',
+  INVOICE_PAYMENT: 'INVOICE_PAYMENT',
+  PREPAYMENT: 'PREPAYMENT',
+  REFUND: 'REFUND',
+  PAYOUT: 'PAYOUT',
+  FEE: 'FEE',
+  ADJUSTMENT: 'ADJUSTMENT',
+} as const;
+
+export type PaymentCategoryType = keyof typeof PaymentCategory;
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED',
+  VOID: 'VOID',
+} as const;
+export type PaymentStatusType = keyof typeof PaymentStatus;
+
+@Entity({ name: 'payments' })
+export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('decimal', { precision: 20, scale: 8 })
+  @Column('decimal', { precision: 12, scale: 2 })
   amount: number;
 
-  // Double-entry: Every transaction affects two accounts
+  //@TODO: Switch to payer
+
   @Column()
   debitAccountId: number;  // Account losing money (asset decreases)
 
+  //@TODO: Switch to payee
   @Column()
   creditAccountId: number; // Account gaining money (asset increases)
 
   @Column({ type: 'varchar', nullable: true })
   description: string;
 
-  @Column({ type: 'varchar', length: 50, default: 'transfer' })
-  category: string; // e.g., 'transfer', 'payment', 'fee', 'interest'
+  //@TODO: Switch to type
+  @Column({ type: 'varchar', length: 50, default: 'POS' })
+  category: PaymentCategoryType;
 
   @Column({ type: 'varchar', length: 20, default: 'PENDING' })
-  status: 'PENDING' | 'COMPLETED' | 'FAILED' | 'CANCELLED';
+  status: PaymentStatusType;
 
   // Optional: Store user IDs for easier querying (denormalized for performance)
   @Column({ nullable: true })
@@ -36,8 +60,4 @@ export class Transaction {
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
-
-  // Business rule: Accounts must be different
-  // Business rule: Amount must be positive
-  // Business rule: Status transitions must be valid
 }

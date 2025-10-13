@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { AccountAggregator } from '../aggregators/account.aggregator';
-import { TransactionAggregator } from '../../../../transactions/domain/aggregators/transaction.aggregator';
+import { PaymentAggregator } from '../../../../payments/domain/aggregators/payment.aggregator';
 
 @Injectable()
 export class AccountBalanceService {
   constructor(
     private readonly accountAggregator: AccountAggregator,
-    private readonly transactionAggregator: TransactionAggregator,
+    private readonly transactionAggregator: PaymentAggregator,
   ) {}
 
   /**
