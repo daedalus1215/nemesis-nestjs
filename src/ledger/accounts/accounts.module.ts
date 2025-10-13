@@ -1,26 +1,23 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Account } from './domain/entities/account.entity';
-import { Transaction } from '../../transactions/domain/entities/transaction.entity';
+import { Payment } from '../../payments/domain/entities/payment.entity';
 import { AccountRepository } from './infra/repositories/account.repository';
 import { AccountService } from './domain/services/account-service/account.service';
 import { AccountAggregator } from './domain/aggregators/account.aggregator';
 import { AccountBalanceService } from './domain/services/account-balance.service';
 import { SystemAccountService } from './domain/services/system-account.service';
 import { UsersModule } from '../../users/users.module';
-import { TransactionAggregator } from '../../transactions/domain/aggregators/transaction.aggregator';
-import { TransactionRepository } from '../../transactions/infra/repositories/transaction.repository';
-import { TransactionService } from '../../transactions/domain/services/transaction.service';
-import { CreateAccountAction } from './app/actions/create-account.action';
-import { GetUserAccountsAction } from './app/actions/get-user-accounts.action';
-import { SetDefaultAccountAction } from './app/actions/set-default-account.action';
-import { GetUserBalanceAction } from './app/actions/get-user-balance.action';
-import { GetAccountBalanceAction } from './app/actions/get-account-balance.action';
-import { GetFinancialSummaryAction } from './app/actions/get-financial-summary.action';
-import { TransferBetweenExternalAccountsAction } from './app/actions/transfer-between-accounts.action';
-import { TransferBetweenInternalAccountsAction } from './app/actions/transfer-between-internal-accounts.action';
-import { GetAccountTransactionHistoryAction } from './app/actions/get-account-transaction-history.action';
-import { SeedMoneyAction } from './app/actions/seed-money.action';
+import { PaymentAggregator } from '../../payments/domain/aggregators/payment.aggregator';
+import { PaymentRepository } from '../../payments/infra/repositories/payment.repository';
+import { PaymentService } from '../../payments/domain/services/payment.service';
+import { CreateAccountAction } from './app/actions/create-account-action/create-account.action';
+import { GetUserAccountsAction } from './app/actions/fetch-user-accounts-action/fetch-user-accounts.action';
+import { SetDefaultAccountAction } from './app/actions/set-default-account-action/set-default-account.action';
+import { GetUserBalanceAction } from './app/actions/fetch-user-balance-action/get-user-balance.action';
+import { FetchAccountBalanceAction } from './app/actions/fetch-account-balance-action/fetch-account-balance.action';
+import { TransferBetweenExternalAccountsAction } from './app/actions/transfer-between-external-accounts-action/transfer-between-external-accounts.action';
+import { FetchAccountPaymentHistoryAction } from './app/actions/fetch-account-payment-history-action/fetch-account-payment-history.action';
 import { LedgerService } from '../services/ledger.service';
 // Transaction Scripts
 import { GetUserAccountsTransactionScript } from './domain/transaction-scripts/get-user-accounts-TS/get-user-accounts.transaction.script';
@@ -29,18 +26,19 @@ import { CreateAccountTransactionScript } from './domain/transaction-scripts/cre
 import { SetDefaultAccountTransactionScript } from './domain/transaction-scripts/set-default-account-TS/set-default-account.transaction.script';
 import { EnsureUserHasDefaultAccountInvariant } from './domain/invariants/ensure-user-has-default-account-invariant/ensure-user-has-default-account.invariant';
 import { GetAccountByIdWithoutOwnershipTransactionScript } from './domain/transaction-scripts/get-account-by-id-without-ownership-TS/get-account-by-id-without-ownership.transaction.script';
-import { GetUserAccountByIdAction } from './app/actions/get-account-by-id-action/get-account-by-id.action';
+import { FetchUserAccountByIdAction } from './app/actions/fetch-account-by-id-action/fetch-account-by-id.action';
+import { TransferBetweenInternalAccountsAction } from './app/actions/transfer-between-internal-accounts-action/transfer-between-internal-accounts.action';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Account, Transaction]),
+    TypeOrmModule.forFeature([Account, Payment]),
     UsersModule, // For UserAggregator
   ],
   providers: [
     AccountRepository,
     { provide: 'AccountRepositoryPort', useClass: AccountRepository },
-    TransactionRepository,
-    { provide: 'TransactionRepositoryPort', useClass: TransactionRepository },
+    PaymentRepository,
+    { provide: 'PaymentRepositoryPort', useClass: PaymentRepository },
     GetUserAccountsTransactionScript,
     GetAccountByIdTransactionScript,
     CreateAccountTransactionScript,
@@ -49,8 +47,8 @@ import { GetUserAccountByIdAction } from './app/actions/get-account-by-id-action
     GetAccountByIdWithoutOwnershipTransactionScript,
     AccountService,
     AccountAggregator,
-    TransactionAggregator,
-    TransactionService, // Added for SeedMoneyAction
+    PaymentAggregator,
+    PaymentService, // Added for SeedMoneyAction
     AccountBalanceService,
     SystemAccountService, // Added for system account management
     LedgerService,
@@ -60,13 +58,11 @@ import { GetUserAccountByIdAction } from './app/actions/get-account-by-id-action
     GetUserAccountsAction,
     SetDefaultAccountAction,
     GetUserBalanceAction,
-    GetAccountBalanceAction,
-    GetUserAccountByIdAction,
-    GetFinancialSummaryAction,
+    FetchAccountBalanceAction,
+    FetchUserAccountByIdAction,
     TransferBetweenExternalAccountsAction,
     TransferBetweenInternalAccountsAction,
-    GetAccountTransactionHistoryAction,
-    SeedMoneyAction,
+    FetchAccountPaymentHistoryAction,
   ],
   exports: [AccountAggregator, LedgerService],
 })

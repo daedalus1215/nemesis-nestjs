@@ -1,16 +1,22 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from '../users/users.module';
 import { AccountsModule } from './accounts/accounts.module';
-import { TransactionsModule } from '../transactions/transactions.module';
+import { TransactionsModule } from '../payments/payment.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { LedgerTransaction } from './domain/entities/ledger.entity';
+import { LedgerService } from './services/ledger.service';
 
 @Module({
   imports: [
-    UsersModule, // For UserAggregator
-    AccountsModule, // For AccountAggregator and controllers
-    TransactionsModule, // For TransactionAggregator
+    UsersModule, 
+    AccountsModule,
+    TransactionsModule,
+    TypeOrmModule.forFeature([LedgerTransaction]),
+  ],
+  providers: [
+    LedgerService,
   ],
   controllers: [
-    // Controllers are now in AccountsModule
   ],
   exports: [AccountsModule], // Export the accounts module which has all the endpoints
 })

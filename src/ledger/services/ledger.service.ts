@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { AccountAggregator } from '../accounts/domain/aggregators/account.aggregator';
-import { TransactionAggregator } from '../../transactions/domain/aggregators/transaction.aggregator';
+import { PaymentAggregator } from '../../payments/domain/aggregators/payment.aggregator';
 import { AccountType } from '../accounts/constant';
+import { PaymentCategory } from 'src/payments/domain/entities/payment.entity';
 
 @Injectable()
 export class LedgerService {
   constructor(
     private readonly accountAggregator: AccountAggregator,
-    private readonly transactionAggregator: TransactionAggregator,
+    private readonly paymentAggregator: PaymentAggregator,
   ) {}
 
   async transferBetweenExternalAccounts(
@@ -16,7 +17,7 @@ export class LedgerService {
     amount: number,
     initiatingUserId: number,
     description?: string,
-  ): Promise<{ transactionId: string; success: boolean }> {
+  ): Promise<{ paymentId: string; success: boolean }> {
     const [fromAccount, toAccount] = await Promise.all([
       this.accountAggregator.getAccountById(fromAccountId, initiatingUserId),
       this.accountAggregator.getAccountByIdWithoutOwnershipCheck(toAccountId),
@@ -39,31 +40,31 @@ export class LedgerService {
     }
 
     const currentBalance =
-      await this.transactionAggregator.getAccountBalance(fromAccountId);
+      await this.paymentAggregator.getAccountBalance(fromAccountId);
     if (currentBalance < amount) {
       throw new Error(
         `Insufficient funds. Current balance: ${currentBalance}, Required: ${amount}`,
       );
     }
 
-    const transaction =
-      await this.transactionAggregator.createDoubleEntryTransaction({
+    const payment =
+      await this.paymentAggregator.createInitialPayment({
         debitAccountId: fromAccountId,
         creditAccountId: toAccountId,
         amount,
         description:
           description ||
           `Transfer from account ${fromAccountId} to ${toAccountId}`,
-        category: 'transfer',
+        category: PaymentCategory.POS,
         initiatingUserId,
         counterpartyUserId: toAccount.ownerId,
       });
 
-    const completedTransaction =
-      await this.transactionAggregator.completeTransaction(transaction.id);
+    const completedPayment =
+      await this.paymentAggregator.completePayment(payment.id);
 
     return {
-      transactionId: completedTransaction.id,
+      paymentId: completedPayment.id,
       success: true,
     };
   }
@@ -75,7 +76,7 @@ export class LedgerService {
     initiatingUserId: number,
     description?: string,
   ): Promise<{
-    transactionId: string;
+    paymentId: string;
     success: boolean;
     fromAccountId: number;
     toAccountId: number;
@@ -110,7 +111,7 @@ export class LedgerService {
     amount: number,
     initiatingUserId: number,
     description?: string,
-  ): Promise<{ transactionId: string; success: boolean }> {
+  ): Promise<{ paymentId: string; success: boolean }> {
     const [fromAccount, toAccount] = await Promise.all([
       this.accountAggregator.getAccountById(fromAccountId, initiatingUserId),
       this.accountAggregator.getAccountById(toAccountId, initiatingUserId),
@@ -121,31 +122,31 @@ export class LedgerService {
     }
 
     const currentBalance =
-      await this.transactionAggregator.getAccountBalance(fromAccountId);
+      await this.paymentAggregator.getAccountBalance(fromAccountId);
     if (currentBalance < amount) {
       throw new Error(
         `Insufficient funds. Current balance: ${currentBalance}, Required: ${amount}`,
       );
     }
 
-    const transaction =
-      await this.transactionAggregator.createDoubleEntryTransaction({
+    const payment =
+      await this.paymentAggregator.createInitialPayment({
         debitAccountId: fromAccountId,
         creditAccountId: toAccountId,
         amount,
         description:
           description ||
           `Transfer from account ${fromAccountId} to ${toAccountId}`,
-        category: 'transfer',
+        category: PaymentCategory.POS,
         initiatingUserId,
         counterpartyUserId: toAccount.ownerId,
       });
 
-    const completedTransaction =
-      await this.transactionAggregator.completeTransaction(transaction.id);
+    const completedPayment =
+      await this.paymentAggregator.completePayment(payment.id);
 
     return {
-      transactionId: completedTransaction.id,
+      paymentId: completedPayment.id,
       success: true,
     };
   }
@@ -159,7 +160,7 @@ export class LedgerService {
 
     const balances = await Promise.all(
       accounts.map((account) =>
-        this.transactionAggregator.getAccountBalance(account.id),
+        this.paymentAggregator.getAccountBalance(account.id),
       ),
     );
     const totalBalance = balances.reduce((sum, balance) => sum + balance, 0);
@@ -189,13 +190,13 @@ export class LedgerService {
     };
   }
 
-  async getAccountTransactionHistory(
+  async getAccountPaymentHistory(
     accountId: number,
     userId: number,
     limit: number = 50,
     offset: number = 0,
   ): Promise<{
-    transactions: any[];
+    payments: any[];
     currentBalance: number;
     accountInfo: { id: number; name: string; accountType: string };
   }> {
@@ -207,86 +208,24 @@ export class LedgerService {
       throw new Error('Account not found or does not belong to user');
     }
 
-    const transactions =
-      await this.transactionAggregator.getAccountTransactions(
+    const payments =
+      await this.paymentAggregator.getAccountPayments(
         accountId,
         limit,
         offset,
       );
 
     const currentBalance =
-      await this.transactionAggregator.getAccountBalance(accountId);
+      await this.paymentAggregator.getAccountBalance(accountId);
 
     return {
-      transactions,
+      payments: payments,
       currentBalance,
       accountInfo: {
         id: account.id,
         name: account.name,
         accountType: account.accountType,
       },
-    };
-  }
-
-  /**
-   * Get user's financial summary
-   */
-  async getUserFinancialSummary(userId: number): Promise<{
-    totalBalance: number;
-    accountCount: number;
-    accounts: Array<{
-      id: number;
-      name: string;
-      accountType: string;
-      balance: number;
-      isDefault: boolean;
-    }>;
-    recentTransactions: any[];
-  }> {
-    const accounts = await this.accountAggregator.getUserAccounts(userId);
-
-    const accountsWithBalances = await Promise.all(
-      accounts.map(async (account) => ({
-        id: account.id,
-        name: account.name,
-        accountType: account.accountType,
-        balance: await this.transactionAggregator.getAccountBalance(account.id),
-        isDefault: account.isDefault,
-      })),
-    );
-
-    const recentTransactions =
-      await this.transactionAggregator.getUserRecentTransactions(userId, 10);
-
-    const totalBalance = accountsWithBalances.reduce(
-      (sum, account) => sum + account.balance,
-      0,
-    );
-
-    return {
-      totalBalance,
-      accountCount: accounts.length,
-      accounts: accountsWithBalances,
-      recentTransactions,
-    };
-  }
-
-  /**
-   * Verify system integrity (double-entry bookkeeping check)
-   */
-  async verifySystemIntegrity(): Promise<{
-    isValid: boolean;
-    totalDebits: number;
-    totalCredits: number;
-    message: string;
-  }> {
-    const integrity = await this.transactionAggregator.verifySystemIntegrity();
-
-    return {
-      ...integrity,
-      message: integrity.isValid
-        ? 'Double-entry bookkeeping integrity verified ✅'
-        : 'Double-entry bookkeeping integrity violation detected ⚠️',
     };
   }
 }
