@@ -6,6 +6,7 @@ import {
 import { FetchAccountByIdResponseDto } from './fetch-account-by-id.response.dto';
 import { AccountService } from 'src/ledger/accounts/domain/services/account-service/account.service';
 import { ProtectedAction } from 'src/shared/application/protected-action-options';
+import { FetchAccountByIdSwagger } from './fetch-account-by-id.swagger';
 
 @Controller('accounts')
 export class FetchUserAccountByIdAction {
@@ -16,6 +17,7 @@ export class FetchUserAccountByIdAction {
     tag: 'Account',
     summary: 'Get user account by id',
   })
+  @FetchAccountByIdSwagger()
   async handle(
     @Param('accountId', ParseIntPipe) accountId: number,
     @GetAuthUser() user: AuthUser,

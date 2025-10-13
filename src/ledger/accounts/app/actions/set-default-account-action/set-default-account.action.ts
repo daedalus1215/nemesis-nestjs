@@ -6,6 +6,7 @@ import {
 import { ProtectedAction } from '../../../../../shared/application/protected-action-options';
 import { AccountAggregator } from '../../../domain/aggregators/account.aggregator';
 import { SetDefaultAccountResponseDto } from './set-default-account.response.dto';
+import { SetDefaultAccountSwagger } from './set-default-account.swagger';
 
 @Controller('accounts')
 export class SetDefaultAccountAction {
@@ -16,6 +17,7 @@ export class SetDefaultAccountAction {
     tag: 'Account',
     summary: 'Set default account',
   })
+  @SetDefaultAccountSwagger()
   async handle(
     @Param('accountId', ParseIntPipe) accountId: number,
     @GetAuthUser() user: AuthUser,

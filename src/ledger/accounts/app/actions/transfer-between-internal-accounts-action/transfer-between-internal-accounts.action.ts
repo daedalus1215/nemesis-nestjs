@@ -4,6 +4,7 @@ import { ProtectedAction } from 'src/shared/application/protected-action-options
 import { TransferBetweenExternalAccountsResponseDto } from '../transfer-between-external-accounts-action/transfer-between-external-accounts.response.dto';
 import { TransferBetweenExternalAccountsRequestDto } from '../transfer-between-external-accounts-action/transfer-between-external-accounts.request.dto';
 import { AuthUser, GetAuthUser } from 'src/auth/app/decorators/get-auth-user.decorator';
+import { TransferBetweenInternalAccountsSwagger } from './transfer-between-internal-accounts.swagger';
 
 @Controller('accounts')
 export class TransferBetweenInternalAccountsAction {
@@ -14,6 +15,7 @@ export class TransferBetweenInternalAccountsAction {
     tag: 'Account',
     summary: 'Transfer between internal accounts',
   })
+  @TransferBetweenInternalAccountsSwagger()
   async handle(
     @Body() transferDto: TransferBetweenExternalAccountsRequestDto,
     @GetAuthUser() user: AuthUser,

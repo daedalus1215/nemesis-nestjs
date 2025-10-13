@@ -6,6 +6,7 @@ import {
 import { ProtectedAction } from '../../../../../shared/application/protected-action-options';
 import { LedgerService } from '../../../../services/ledger.service';
 import { UserBalanceResponseDto } from './user-balance-response.dto';
+import { FetchUserBalanceSwagger } from './fetch-user-balance.swagger';
 
 @Controller('accounts')
 export class GetUserBalanceAction {
@@ -16,6 +17,7 @@ export class GetUserBalanceAction {
     tag: 'Account',
     summary: 'Get user balance',
   })
+  @FetchUserBalanceSwagger()
   async handle(@GetAuthUser() user: AuthUser): Promise<UserBalanceResponseDto> {
     const totalBalance = await this.ledgerService.getUserTotalBalance(
       user.userId,

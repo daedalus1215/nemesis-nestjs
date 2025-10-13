@@ -6,6 +6,7 @@ import {
 import { ProtectedAction } from '../../../../../shared/application/protected-action-options';
 import { FetchAccountBalanceResponseDto } from './account-balance.response.dto';
 import { AccountBalanceService } from '../../../domain/services/account-balance.service';
+import { FetchAccountBalanceSwagger } from './fetch-account-balance.swagger';
 
 @Controller('accounts')
 export class FetchAccountBalanceAction {
@@ -16,6 +17,7 @@ export class FetchAccountBalanceAction {
     tag: 'Account',
     summary: 'Get account balance',
   })
+  @FetchAccountBalanceSwagger()
   async handle(
     @Param('accountId', ParseIntPipe) accountId: number,
     @GetAuthUser() user: AuthUser,

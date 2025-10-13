@@ -7,6 +7,7 @@ import { LedgerService } from '../../../../services/ledger.service';
 import { ProtectedAction } from '../../../../../shared/application/protected-action-options';
 import { TransferBetweenUsersDto } from '../transfer-between-internal-accounts-action/transfer-between-internal-accounts.request.dto';
 import { TransferBetweenExternalAccountsResponseDto } from './transfer-between-external-accounts.response.dto';
+import { TransferBetweenExternalAccountsSwagger } from './transfer-between-external-accounts.swagger';
 
 @Controller('accounts')
 export class TransferBetweenExternalAccountsAction {
@@ -17,6 +18,7 @@ export class TransferBetweenExternalAccountsAction {
     tag: 'Account',
     summary: 'Transfer between users default accounts',
   })
+  @TransferBetweenExternalAccountsSwagger()
   async handle(
     @Body() transferDto: TransferBetweenUsersDto,
     @GetAuthUser() user: AuthUser,

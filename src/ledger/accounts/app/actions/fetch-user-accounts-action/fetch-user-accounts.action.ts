@@ -6,6 +6,7 @@ import {
 import { ProtectedAction } from '../../../../../shared/application/protected-action-options';
 import { AccountAggregator } from '../../../domain/aggregators/account.aggregator';
 import { FetchUserAccountsResponseDto } from './fetch-user-accounts.response.dto';
+import { FetchUserAccountsSwagger } from './fetch-user-accounts.swagger';
 
 @Controller('accounts')
 export class GetUserAccountsAction {
@@ -16,6 +17,7 @@ export class GetUserAccountsAction {
     tag: 'Account',
     summary: 'Get user accounts',
   })
+  @FetchUserAccountsSwagger()
   async handle(
     @GetAuthUser() user: AuthUser,
   ): Promise<FetchUserAccountsResponseDto> {

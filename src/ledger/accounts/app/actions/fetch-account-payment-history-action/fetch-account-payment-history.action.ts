@@ -7,6 +7,7 @@ import { ProtectedAction } from '../../../../../shared/application/protected-act
 import { LedgerService } from '../../../../services/ledger.service';
 import { FetchPaymentHistoryRequestDto } from './fetch-account-payment-history.request.dto';
 import { AccountTransactionHistoryResponseDto } from './fetch-account-payment-history.response.dto';
+import { FetchAccountPaymentHistorySwagger } from './fetch-account-payment-history.swagger';
 
 @Controller('accounts')
 export class FetchAccountPaymentHistoryAction {
@@ -18,6 +19,7 @@ export class FetchAccountPaymentHistoryAction {
     tag: 'Account',
     summary: 'Get account transaction history',
   })
+  @FetchAccountPaymentHistorySwagger()
   async handle(
     @Param('accountId', ParseIntPipe) accountId: number,
     @Query() query: FetchPaymentHistoryRequestDto,
