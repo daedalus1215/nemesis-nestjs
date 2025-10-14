@@ -14,10 +14,10 @@ import { PaymentService } from '../../payments/domain/services/payment.service';
 import { CreateAccountAction } from './app/actions/create-account-action/create-account.action';
 import { GetUserAccountsAction } from './app/actions/fetch-user-accounts-action/fetch-user-accounts.action';
 import { SetDefaultAccountAction } from './app/actions/set-default-account-action/set-default-account.action';
-import { GetUserBalanceAction } from './app/actions/fetch-user-balance-action/get-user-balance.action';
+import { FetchUserBalanceAction } from '../app/actions/fetch-user-balance-action/fetch-user-balance.action';
 import { FetchAccountBalanceAction } from './app/actions/fetch-account-balance-action/fetch-account-balance.action';
-import { TransferBetweenExternalAccountsAction } from './app/actions/transfer-between-external-accounts-action/transfer-between-external-accounts.action';
-import { FetchAccountPaymentHistoryAction } from './app/actions/fetch-account-payment-history-action/fetch-account-payment-history.action';
+import { TransferBetweenExternalAccountsAction } from '../app/actions/transfer-between-external-accounts-action/transfer-between-external-accounts.action';
+import { FetchAccountPaymentHistoryAction } from '../app/actions/fetch-account-payment-history-action/fetch-account-payment-history.action';
 import { LedgerService } from '../services/ledger.service';
 // Transaction Scripts
 import { GetUserAccountsTransactionScript } from './domain/transaction-scripts/get-user-accounts-TS/get-user-accounts.transaction.script';
@@ -27,7 +27,7 @@ import { SetDefaultAccountTransactionScript } from './domain/transaction-scripts
 import { EnsureUserHasDefaultAccountInvariant } from './domain/invariants/ensure-user-has-default-account-invariant/ensure-user-has-default-account.invariant';
 import { GetAccountByIdWithoutOwnershipTransactionScript } from './domain/transaction-scripts/get-account-by-id-without-ownership-TS/get-account-by-id-without-ownership.transaction.script';
 import { FetchUserAccountByIdAction } from './app/actions/fetch-account-by-id-action/fetch-account-by-id.action';
-import { TransferBetweenInternalAccountsAction } from './app/actions/transfer-between-internal-accounts-action/transfer-between-internal-accounts.action';
+import { TransferBetweenInternalAccountsAction } from '../app/actions/transfer-between-internal-accounts-action/transfer-between-internal-accounts.action';
 
 @Module({
   imports: [
@@ -57,7 +57,7 @@ import { TransferBetweenInternalAccountsAction } from './app/actions/transfer-be
     CreateAccountAction,
     GetUserAccountsAction,
     SetDefaultAccountAction,
-    GetUserBalanceAction,
+    FetchUserBalanceAction,
     FetchAccountBalanceAction,
     FetchUserAccountByIdAction,
     TransferBetweenExternalAccountsAction,

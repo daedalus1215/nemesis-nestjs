@@ -2,9 +2,9 @@ import { Controller, Get, Param, Query, ParseIntPipe } from '@nestjs/common';
 import {
   AuthUser,
   GetAuthUser,
-} from '../../../../../auth/app/decorators/get-auth-user.decorator';
-import { ProtectedAction } from '../../../../../shared/application/protected-action-options';
-import { LedgerService } from '../../../../services/ledger.service';
+} from '../../../../auth/app/decorators/get-auth-user.decorator';
+import { ProtectedAction } from '../../../../shared/application/protected-action-options';
+import { LedgerService } from '../../../services/ledger.service';
 import { FetchPaymentHistoryRequestDto } from './fetch-account-payment-history.request.dto';
 import { AccountTransactionHistoryResponseDto } from './fetch-account-payment-history.response.dto';
 import { FetchAccountPaymentHistorySwagger } from './fetch-account-payment-history.swagger';
