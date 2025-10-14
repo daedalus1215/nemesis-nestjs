@@ -8,10 +8,11 @@ import {
 } from '../../../../../auth/app/decorators/get-auth-user.decorator';
 import { ProtectedAction } from '../../../../../shared/application/protected-action-options';
 import { CreateAccountSwagger } from './create-account.swagger';
+import { AccountService } from 'src/ledger/accounts/domain/services/account-service/account.service';
 
 @Controller('accounts')
 export class CreateAccountAction {
-  constructor(private readonly ledgerService: LedgerService) {}
+  constructor(private readonly service: AccountService) {}
 
   @Post()
   @ProtectedAction({
@@ -23,7 +24,7 @@ export class CreateAccountAction {
     @Body() createAccountDto: CreateAccountRequestDto,
     @GetAuthUser() user: AuthUser,
   ): Promise<AccountResponseDto> {
-    const result = await this.ledgerService.createAccountForUser(
+    const result = await this.service.createAccountForUser(
       user.userId,
       createAccountDto.name,
       createAccountDto.accountType,

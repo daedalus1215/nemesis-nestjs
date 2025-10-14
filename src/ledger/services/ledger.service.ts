@@ -11,7 +11,40 @@ export class LedgerService {
     private readonly paymentAggregator: PaymentAggregator,
   ) {}
 
-  async transferBetweenExternalAccounts(
+  async transferBetweenUsers(
+    fromUserId: number,
+    toUserId: number,
+    amount: number,
+    initiatingUserId: number,
+    description?: string,
+  ): Promise<{
+    paymentId: string;
+    success: boolean;
+    fromAccountId: number;
+    toAccountId: number;
+  }> {
+    const fromAccount =
+      await this.accountAggregator.getDefaultAccountForUser(fromUserId);
+
+    const toAccount =
+      await this.accountAggregator.getDefaultAccountForUser(toUserId);
+
+    const result = await this.transferBetweenExternalAccounts(
+      fromAccount.id,
+      toAccount.id,
+      amount,
+      initiatingUserId,
+      description,
+    );
+
+    return {
+      ...result,
+      fromAccountId: fromAccount.id,
+      toAccountId: toAccount.id,
+    };
+  }
+
+  private async transferBetweenExternalAccounts(
     fromAccountId: number,
     toAccountId: number,
     amount: number,
@@ -66,42 +99,6 @@ export class LedgerService {
     return {
       paymentId: completedPayment.id,
       success: true,
-    };
-  }
-
-  async transferBetweenUsers(
-    fromUserId: number,
-    toUserId: number,
-    amount: number,
-    initiatingUserId: number,
-    description?: string,
-  ): Promise<{
-    paymentId: string;
-    success: boolean;
-    fromAccountId: number;
-    toAccountId: number;
-  }> {
-    // Get the sender's default account (creating one if needed)
-    const fromAccount =
-      await this.accountAggregator.getDefaultAccountForUser(fromUserId);
-
-    // Get the recipient's default account (creating one if needed)
-    const toAccount =
-      await this.accountAggregator.getDefaultAccountForUser(toUserId);
-
-    // Call the existing transferBetweenExternalAccounts method
-    const result = await this.transferBetweenExternalAccounts(
-      fromAccount.id,
-      toAccount.id,
-      amount,
-      initiatingUserId,
-      description,
-    );
-
-    return {
-      ...result,
-      fromAccountId: fromAccount.id,
-      toAccountId: toAccount.id,
     };
   }
 
@@ -166,28 +163,6 @@ export class LedgerService {
     const totalBalance = balances.reduce((sum, balance) => sum + balance, 0);
 
     return totalBalance;
-  }
-
-  async createAccountForUser(
-    userId: number,
-    accountName: string,
-    accountType: AccountType = 'ASSET',
-  ): Promise<{ accountId: number; isDefault: boolean }> {
-    const existingAccounts =
-      await this.accountAggregator.getUserAccounts(userId);
-    const isFirstAccount = existingAccounts.length === 0;
-
-    const account = await this.accountAggregator.create({
-      ownerId: userId,
-      name: accountName,
-      accountType,
-      isDefault: isFirstAccount,
-    });
-
-    return {
-      accountId: account.id,
-      isDefault: isFirstAccount,
-    };
   }
 
   async getAccountPaymentHistory(

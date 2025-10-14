@@ -7,6 +7,7 @@ import { SetDefaultAccountTransactionScript } from '../../transaction-scripts/se
 import { EnsureUserHasDefaultAccountInvariant } from '../../invariants/ensure-user-has-default-account-invariant/ensure-user-has-default-account.invariant';
 import { AccountRepository } from '../../../infra/repositories/account.repository';
 import { AccountType } from '../../../constant';
+import { AccountAggregator } from '../../aggregators/account.aggregator';
 
 @Injectable()
 export class AccountService {
@@ -17,6 +18,7 @@ export class AccountService {
     private readonly setDefaultAccountTS: SetDefaultAccountTransactionScript,
     private readonly ensureUserHasDefaultAccountInvariant: EnsureUserHasDefaultAccountInvariant,
     private readonly accountRepository: AccountRepository,
+    private readonly accountAggregator: AccountAggregator
   ) {}
 
   async getUserAccounts(userId: number): Promise<Account[]> {
@@ -54,5 +56,27 @@ export class AccountService {
 
   async ensureUserHasDefaultAccount(userId: number): Promise<Account> {
     return this.ensureUserHasDefaultAccountInvariant.execute(userId);
+  }
+
+  async createAccountForUser(
+    userId: number,
+    accountName: string,
+    accountType: AccountType = 'ASSET',
+  ): Promise<{ accountId: number; isDefault: boolean }> {
+    const existingAccounts =
+      await this.accountAggregator.getUserAccounts(userId);
+    const isFirstAccount = existingAccounts.length === 0;
+
+    const account = await this.accountAggregator.create({
+      ownerId: userId,
+      name: accountName,
+      accountType,
+      isDefault: isFirstAccount,
+    });
+
+    return {
+      accountId: account.id,
+      isDefault: isFirstAccount,
+    };
   }
 }

@@ -1,10 +1,10 @@
 import { User } from 'src/users/domain/entities/user.entity';
 import { Injectable } from '@nestjs/common';
-import { GetUserDto } from 'src/users/app/controllers/get-user-action/dtos/responses/get-user.dto';
+import { FetchUserResponseDto } from './fetch-user.response.dto';
 
 @Injectable()
-export class GetUserConverter {
-  public apply(entities: User[]): GetUserDto[] {
+export class FetchUserResponder {
+  public apply(entities: User[]): FetchUserResponseDto[] {
     console.log(entities);
     return entities.map((entity) => ({
       username: entity.username,

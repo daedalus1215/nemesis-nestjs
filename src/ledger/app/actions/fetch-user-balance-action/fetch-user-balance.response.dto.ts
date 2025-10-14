@@ -1,4 +1,4 @@
-export type UserBalanceResponseDto = {
+export type FetchUserBalanceResponseDto = {
   totalBalance: number;
   userId: number;
   success: boolean;

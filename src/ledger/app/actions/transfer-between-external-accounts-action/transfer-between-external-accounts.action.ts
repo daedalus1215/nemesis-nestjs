@@ -2,9 +2,9 @@ import { Body, Controller, Post } from '@nestjs/common';
 import {
   AuthUser,
   GetAuthUser,
-} from '../../../../../auth/app/decorators/get-auth-user.decorator';
-import { LedgerService } from '../../../../services/ledger.service';
-import { ProtectedAction } from '../../../../../shared/application/protected-action-options';
+} from '../../../../auth/app/decorators/get-auth-user.decorator';
+import { LedgerService } from '../../../services/ledger.service';
+import { ProtectedAction } from '../../../../shared/application/protected-action-options';
 import { TransferBetweenUsersDto } from '../transfer-between-internal-accounts-action/transfer-between-internal-accounts.request.dto';
 import { TransferBetweenExternalAccountsResponseDto } from './transfer-between-external-accounts.response.dto';
 import { TransferBetweenExternalAccountsSwagger } from './transfer-between-external-accounts.swagger';

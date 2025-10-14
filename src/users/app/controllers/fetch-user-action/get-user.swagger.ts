@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { GetUserDto } from 'src/users/app/controllers/get-user-action/dtos/responses/get-user.dto';
+import { FetchUserResponseDto } from './fetch-user.response.dto';
 
 export const GetUsersSwagger = () => {
   return applyDecorators(
@@ -9,7 +9,7 @@ export const GetUsersSwagger = () => {
     ApiResponse({
       status: 200,
       description: 'List of users retrieved successfully',
-      type: [GetUserDto],
+      type: [FetchUserResponseDto],
     }),
     ApiResponse({ status: 500, description: 'Internal server error' }),
   );

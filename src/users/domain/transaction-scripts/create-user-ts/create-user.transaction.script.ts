@@ -2,10 +2,10 @@ import { UserExistsValidator } from './validators/user-exists.validatgor';
 import { IsPasswordStrongValidator } from './validators/is-password-strong.validator';
 import { ConfigService } from '@nestjs/config';
 import { UserRepository } from 'src/users/infrastructure/user.repository';
-import { CreateUserDto } from 'src/users/app/dtos/create-user.dto';
 import { User } from 'src/users/domain/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { Injectable } from '@nestjs/common';
+import { RegisterUserRequestDto } from 'src/users/app/controllers/register-user-action/dtos/register-user.request.dto';
 
 @Injectable()
 export class CreateUserTransactionScript {
@@ -16,7 +16,7 @@ export class CreateUserTransactionScript {
     private readonly configService: ConfigService,
   ) {}
 
-  async apply(createUserDto: CreateUserDto): Promise<User> {
+  async apply(createUserDto: RegisterUserRequestDto): Promise<User> {
     const { username, password } = createUserDto;
 
     const existingUser = await this.userRepository.findByUsername(username);

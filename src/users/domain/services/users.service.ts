@@ -1,8 +1,8 @@
-import { CreateUserDto } from '../../app/dtos/create-user.dto';
 import { User } from '../entities/user.entity';
 import { UserRepository } from 'src/users/infrastructure/user.repository';
 import { Injectable } from '@nestjs/common';
 import { CreateUserTransactionScript } from '../transaction-scripts/create-user-ts/create-user.transaction.script';
+import { RegisterUserRequestDto } from 'src/users/app/controllers/register-user-action/dtos/register-user.request.dto';
 
 @Injectable()
 export class UsersService {
@@ -11,8 +11,8 @@ export class UsersService {
     private readonly createUserTransactionScript: CreateUserTransactionScript,
   ) {}
 
-  async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const user = await this.createUserTransactionScript.apply(createUserDto);
+  async createUser(dto: RegisterUserRequestDto): Promise<User> {
+    const user = await this.createUserTransactionScript.apply(dto);
     return user;
   }
 
