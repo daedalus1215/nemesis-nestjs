@@ -19,4 +19,4 @@ import { AccountsModule } from '../ledger/accounts/accounts.module';
   ],
   exports: [PaymentAggregator], 
 })
-export class TransactionsModule {}
+export class PaymentsModule {}

@@ -11,11 +11,9 @@ export class PaymentService {
   constructor(
     private readonly paymentAggregator: PaymentAggregator,
     private readonly accountAggregator: AccountAggregator,
-  ) { }
+  ) {}
 
-  async createValidatedPayment(
-    data: CreatePaymentCommand,
-  ): Promise<Payment> {
+  async createValidatedPayment(data: CreatePaymentCommand): Promise<Payment> {
     const [debitAccount, creditAccount] = await Promise.all([
       this.accountAggregator.getAccountByIdWithoutOwnershipCheck(
         data.debitAccountId,
@@ -42,7 +40,9 @@ export class PaymentService {
       );
     }
 
-    return this.paymentAggregator.completePayment((await this.paymentAggregator.createInitialPayment(data)).id);
+    return this.paymentAggregator.completePayment(
+      (await this.paymentAggregator.createInitialPayment(data)).id,
+    );
   }
 
   async getValidatedAccountBalance(

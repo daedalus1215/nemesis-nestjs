@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { UsersModule } from '../users/users.module';
 import { AccountsModule } from './accounts/accounts.module';
-import { TransactionsModule } from '../payments/payment.module';
+import { PaymentsModule } from '../payments/payment.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LedgerTransaction } from './domain/entities/ledger.entity';
 import { LedgerService } from './services/ledger.service';
@@ -10,7 +10,7 @@ import { LedgerService } from './services/ledger.service';
   imports: [
     UsersModule, 
     AccountsModule,
-    TransactionsModule,
+    PaymentsModule,
     TypeOrmModule.forFeature([LedgerTransaction]),
   ],
   providers: [

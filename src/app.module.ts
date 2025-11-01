@@ -5,7 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LedgerModule } from './ledger/ledger.module';
 import { AccountsModule } from './ledger/accounts/accounts.module';
-import { TransactionsModule } from './payments/payment.module';
+import { PaymentsModule } from './payments/payment.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -34,7 +34,7 @@ import * as Joi from 'joi';
     }),
     UsersModule,
     AccountsModule,
-    TransactionsModule,
+    PaymentsModule,
     LedgerModule,
     AuthModule,
   ],
