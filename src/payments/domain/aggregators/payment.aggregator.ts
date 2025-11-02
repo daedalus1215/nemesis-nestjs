@@ -33,7 +33,7 @@ export class PaymentAggregator {
     limit: number = 50,
     offset: number = 0,
   ): Promise<Payment[]> {
-    return this.paymentRepository.getAccountCompletedPayments(
+    return this.paymentRepository.getAccountPayments(
       accountId,
       limit,
       offset,

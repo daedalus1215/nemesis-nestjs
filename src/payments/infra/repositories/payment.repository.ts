@@ -71,6 +71,23 @@ export class PaymentRepository implements PaymentRepositoryPort {
       .getMany();
   }
 
+  async getAccountPayments(
+    accountId: number,
+    limit: number = 50,
+    offset: number = 0,
+  ): Promise<Payment[]> {
+    return this.repository
+      .createQueryBuilder('payment')
+      .where(
+        '(payment.debitAccountId = :accountId OR payment.creditAccountId = :accountId)',
+        { accountId },
+      )
+      .orderBy('payment.createdAt', 'DESC')
+      .limit(limit)
+      .offset(offset)
+      .getMany();
+  }
+
   /**
    * Get user's payments across all their accounts
    * Uses denormalized user IDs for performance
