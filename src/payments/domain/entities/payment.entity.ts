@@ -23,41 +23,36 @@ export type PaymentStatusType = typeof PaymentStatus[keyof typeof PaymentStatus]
 
 @Entity({ name: 'payments' })
 export class Payment {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn({ type: 'int' })
+  id: number;
 
-  @Column('decimal', { precision: 12, scale: 2 })
+  @Column({name: 'amount', type: 'decimal', precision: 12, scale: 2 })
   amount: number;
 
-  //@TODO: Switch to payer
+  @Column({name: 'debit_account_id', type: 'int'})
+  debitAccountId: number; 
 
-  @Column()
-  debitAccountId: number;  // Account losing money (asset decreases)
+  @Column({name: 'credit_account_id', type: 'int'})
+  creditAccountId: number; 
 
-  //@TODO: Switch to payee
-  @Column()
-  creditAccountId: number; // Account gaining money (asset increases)
-
-  @Column({ type: 'varchar', nullable: true })
+  @Column({name: 'description', type: 'varchar', nullable: true })
   description: string;
 
-  //@TODO: Switch to type
-  @Column({ type: 'varchar', length: 50, default: 'POS' })
+  @Column({name: 'category', type: 'varchar', length: 50, default: 'POS' })
   category: PaymentCategoryType;
 
-  @Column({ type: 'varchar', length: 20, default: 'PENDING' })
+  @Column({name: 'status', type: 'varchar', length: 20, default: 'PENDING' })
   status: PaymentStatusType;
 
-  // Optional: Store user IDs for easier querying (denormalized for performance)
-  @Column({ nullable: true })
-  initiatingUserId: number;
+  @Column({name: 'payer_user_id', type: 'int', nullable: true })
+  payerUserId: number;
 
-  @Column({ nullable: true })
-  counterpartyUserId: number;
+  @Column({name: 'payee_user_id', type: 'int', nullable: true })
+  payeeUserId: number;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({name: 'created_at', type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({name: 'updated_at', type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 }

@@ -18,6 +18,7 @@ export class Migrate_TransactionsToPayments1760316123000 implements MigrationInt
         // 1. Amount precision: DECIMAL(20,8) -> decimal(12,2) (round to 2 decimal places)
         // 2. Status mapping: 'CANCELLED' -> 'VOID'
         // 3. Category mapping: map old categories to new ones
+        // 4. Skip transactions that already exist in payments (idempotent migration)
         await queryRunner.query(`
             INSERT INTO "payments" (
                 "id",
@@ -33,28 +34,31 @@ export class Migrate_TransactionsToPayments1760316123000 implements MigrationInt
                 "updatedAt"
             )
             SELECT 
-                "id",
-                ROUND("amount", 2) as "amount",  -- Round to 2 decimal places
-                "debitAccountId",
-                "creditAccountId",
-                "description",
+                t."id",
+                ROUND(t."amount", 2) as "amount",  -- Round to 2 decimal places
+                t."debitAccountId",
+                t."creditAccountId",
+                t."description",
                 CASE 
-                    WHEN "category" = 'transfer' THEN 'POS'
-                    WHEN "category" = 'payment' THEN 'INVOICE_PAYMENT'
-                    WHEN "category" = 'fee' THEN 'FEE'
-                    WHEN "category" = 'interest' THEN 'ADJUSTMENT'
-                    WHEN "category" = 'adjustment' THEN 'ADJUSTMENT'
+                    WHEN t."category" = 'transfer' THEN 'POS'
+                    WHEN t."category" = 'payment' THEN 'INVOICE_PAYMENT'
+                    WHEN t."category" = 'fee' THEN 'FEE'
+                    WHEN t."category" = 'interest' THEN 'ADJUSTMENT'
+                    WHEN t."category" = 'adjustment' THEN 'ADJUSTMENT'
                     ELSE 'POS'  -- Default fallback
                 END as "category",
                 CASE 
-                    WHEN "status" = 'CANCELLED' THEN 'VOID'
-                    ELSE "status"
+                    WHEN t."status" = 'CANCELLED' THEN 'VOID'
+                    ELSE t."status"
                 END as "status",
-                "initiatingUserId",
-                "counterpartyUserId",
-                "createdAt",
-                "updatedAt"
-            FROM "transaction"
+                t."initiatingUserId",
+                t."counterpartyUserId",
+                t."createdAt",
+                t."updatedAt"
+            FROM "transaction" t
+            WHERE NOT EXISTS (
+                SELECT 1 FROM "payments" p WHERE p."id" = t."id"
+            )
         `);
 
         // Verify the migration

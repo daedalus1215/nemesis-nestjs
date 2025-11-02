@@ -100,8 +100,8 @@ export class PaymentService {
         description ||
         `Transfer from account ${fromAccountId} to account ${toAccountId}`,
       category: PaymentCategory.POS,
-      initiatingUserId,
-      counterpartyUserId: toAccount.ownerId,
+      payerUserId: initiatingUserId,
+      payeeUserId: toAccount.ownerId,
     });
   }
 }

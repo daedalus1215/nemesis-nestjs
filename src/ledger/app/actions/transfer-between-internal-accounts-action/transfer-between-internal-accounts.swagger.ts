@@ -65,7 +65,7 @@ export const TransferBetweenInternalAccountsSwagger = () => {
       schema: {
         type: 'object',
         properties: {
-          transactionId: { type: 'string', example: 'txn_abc123' },
+          transactionId: { type: 'number', example: 123 },
           fromAccountId: { type: 'number', example: 123 },
           toAccountId: { type: 'number', example: 124 },
           amount: { type: 'number', example: 100.50 },
@@ -77,7 +77,7 @@ export const TransferBetweenInternalAccountsSwagger = () => {
         'Success Response': {
           summary: 'Transfer completed',
           value: {
-            transactionId: 'txn_abc123',
+            transactionId: 123,
             fromAccountId: 123,
             toAccountId: 124,
             amount: 100.50,

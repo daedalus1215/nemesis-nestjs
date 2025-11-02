@@ -21,7 +21,7 @@ export class PaymentRepository implements PaymentRepositoryPort {
     return this.repository.save(payment);
   }
 
-  async findById(id: string): Promise<Payment | null> {
+  async findById(id: number): Promise<Payment | null> {
     return this.repository.findOne({ where: { id } });
   }
 
@@ -82,7 +82,7 @@ export class PaymentRepository implements PaymentRepositoryPort {
     return this.repository
       .createQueryBuilder('payment')
       .where(
-        '(payment.initiatingUserId = :userId OR payment.counterpartyUserId = :userId)',
+        '(payment.payerUserId = :userId OR payment.payeeUserId = :userId)',
         { userId },
       )
       .andWhere('payment.status = :status', { status: PaymentStatus.COMPLETED })

@@ -8,8 +8,8 @@ export type CreatePaymentCommand = {
   amount: number;
   description?: string;
   category?: PaymentCategoryType;
-  initiatingUserId?: number;
-  counterpartyUserId?: number;
+  payerUserId?: number;
+  payeeUserId?: number;
 };
 
 @Injectable()
@@ -69,15 +69,15 @@ export class PaymentAggregator {
       description: data.description || 'Transfer',
       category: data.category || PaymentCategory.POS,
       status: PaymentStatus.PENDING,
-      initiatingUserId: data.initiatingUserId,
-      counterpartyUserId: data.counterpartyUserId,
+      payerUserId: data.payerUserId,
+      payeeUserId: data.payeeUserId,
     });
   }
 
   /**
    * Complete a pending payment
    */
-  async completePayment(paymentId: string): Promise<Payment> {
+  async completePayment(paymentId: number): Promise<Payment> {
     const payment =
       await this.paymentRepository.findById(paymentId);
     if (!payment) {
@@ -99,7 +99,7 @@ export class PaymentAggregator {
   /**
    * Get payment by ID
    */
-  async getById(paymentId: string): Promise<Payment | null> {
+  async getById(paymentId: number): Promise<Payment | null> {
     return this.paymentRepository.findById(paymentId);
   }
 

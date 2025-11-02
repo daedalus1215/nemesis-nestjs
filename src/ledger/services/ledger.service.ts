@@ -18,7 +18,7 @@ export class LedgerService {
     initiatingUserId: number,
     description?: string,
   ): Promise<{
-    paymentId: string;
+    paymentId: number;
     success: boolean;
     fromAccountId: number;
     toAccountId: number;
@@ -50,7 +50,7 @@ export class LedgerService {
     amount: number,
     initiatingUserId: number,
     description?: string,
-  ): Promise<{ paymentId: string; success: boolean }> {
+  ): Promise<{ paymentId: number; success: boolean }> {
     const [fromAccount, toAccount] = await Promise.all([
       this.accountAggregator.getAccountById(fromAccountId, initiatingUserId),
       this.accountAggregator.getAccountByIdWithoutOwnershipCheck(toAccountId),
@@ -89,8 +89,8 @@ export class LedgerService {
           description ||
           `Transfer from account ${fromAccountId} to ${toAccountId}`,
         category: PaymentCategory.POS,
-        initiatingUserId,
-        counterpartyUserId: toAccount.ownerId,
+        payerUserId: initiatingUserId,
+        payeeUserId: toAccount.ownerId,
       });
 
     const completedPayment =
@@ -108,7 +108,7 @@ export class LedgerService {
     amount: number,
     initiatingUserId: number,
     description?: string,
-  ): Promise<{ paymentId: string; success: boolean }> {
+  ): Promise<{ paymentId: number; success: boolean }> {
     const [fromAccount, toAccount] = await Promise.all([
       this.accountAggregator.getAccountById(fromAccountId, initiatingUserId),
       this.accountAggregator.getAccountById(toAccountId, initiatingUserId),
@@ -135,8 +135,8 @@ export class LedgerService {
           description ||
           `Transfer from account ${fromAccountId} to ${toAccountId}`,
         category: PaymentCategory.POS,
-        initiatingUserId,
-        counterpartyUserId: toAccount.ownerId,
+        payerUserId: initiatingUserId,
+        payeeUserId: toAccount.ownerId,
       });
 
     const completedPayment =
