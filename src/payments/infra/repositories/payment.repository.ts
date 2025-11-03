@@ -55,6 +55,7 @@ export class PaymentRepository implements PaymentRepositoryPort {
 
   async getAccountCompletedPayments(
     accountId: number,
+
     limit: number = 50,
     offset: number = 0,
   ): Promise<Payment[]> {

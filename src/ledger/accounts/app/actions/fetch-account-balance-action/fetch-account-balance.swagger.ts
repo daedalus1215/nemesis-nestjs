@@ -1,5 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiParam, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
 export const FetchAccountBalanceSwagger = () => {
   return applyDecorators(
@@ -7,7 +13,8 @@ export const FetchAccountBalanceSwagger = () => {
     ApiBearerAuth(),
     ApiOperation({
       summary: 'Get account balance',
-      description: 'Retrieves the current balance for a specific account owned by the authenticated user.',
+      description:
+        'Retrieves the current balance for a specific account owned by the authenticated user.',
       tags: ['Account'],
     }),
     ApiParam({
@@ -24,8 +31,8 @@ export const FetchAccountBalanceSwagger = () => {
         properties: {
           accountId: { type: 'number', example: 123 },
           balance: { type: 'number', example: 1500.75 },
-          success: { type: 'boolean', example: true }
-        }
+          success: { type: 'boolean', example: true },
+        },
       },
       examples: {
         'Success Response': {
@@ -33,10 +40,10 @@ export const FetchAccountBalanceSwagger = () => {
           value: {
             accountId: 123,
             balance: 1500.75,
-            success: true
-          }
-        }
-      }
+            success: true,
+          },
+        },
+      },
     }),
     ApiResponse({
       status: 400,
@@ -45,10 +52,13 @@ export const FetchAccountBalanceSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 400 },
-          message: { type: 'string', example: 'Validation failed (numeric string is expected)' },
-          error: { type: 'string', example: 'Bad Request' }
-        }
-      }
+          message: {
+            type: 'string',
+            example: 'Validation failed (numeric string is expected)',
+          },
+          error: { type: 'string', example: 'Bad Request' },
+        },
+      },
     }),
     ApiResponse({
       status: 401,
@@ -57,9 +67,9 @@ export const FetchAccountBalanceSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 401 },
-          message: { type: 'string', example: 'Unauthorized' }
-        }
-      }
+          message: { type: 'string', example: 'Unauthorized' },
+        },
+      },
     }),
     ApiResponse({
       status: 403,
@@ -68,9 +78,9 @@ export const FetchAccountBalanceSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 403 },
-          message: { type: 'string', example: 'Access denied to this account' }
-        }
-      }
+          message: { type: 'string', example: 'Access denied to this account' },
+        },
+      },
     }),
     ApiResponse({
       status: 404,
@@ -79,9 +89,9 @@ export const FetchAccountBalanceSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 404 },
-          message: { type: 'string', example: 'Account not found' }
-        }
-      }
+          message: { type: 'string', example: 'Account not found' },
+        },
+      },
     }),
     ApiResponse({
       status: 500,
@@ -90,9 +100,9 @@ export const FetchAccountBalanceSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 500 },
-          message: { type: 'string', example: 'Internal server error' }
-        }
-      }
-    })
+          message: { type: 'string', example: 'Internal server error' },
+        },
+      },
+    }),
   );
 };

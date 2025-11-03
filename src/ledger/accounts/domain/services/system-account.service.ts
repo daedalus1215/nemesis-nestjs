@@ -29,19 +29,22 @@ export class SystemAccountService implements OnModuleInit {
       // Check if system user exists
       const existingUser = await queryRunner.query(
         'SELECT id FROM user WHERE id = ?',
-        [SystemAccountService.SYSTEM_USER_ID]
+        [SystemAccountService.SYSTEM_USER_ID],
       );
 
       if (existingUser.length === 0) {
         // Create system user
-        await queryRunner.query(`
+        await queryRunner.query(
+          `
           INSERT INTO user (id, username, password)
           VALUES (?, ?, ?)
-        `, [
-          SystemAccountService.SYSTEM_USER_ID,
-          'system',
-          'SYSTEM_ACCOUNT_NO_LOGIN' // Special password that prevents login
-        ]);
+        `,
+          [
+            SystemAccountService.SYSTEM_USER_ID,
+            'system',
+            'SYSTEM_ACCOUNT_NO_LOGIN', // Special password that prevents login
+          ],
+        );
 
         console.log('✅ System user created for foreign key constraint');
       }
@@ -55,10 +58,11 @@ export class SystemAccountService implements OnModuleInit {
    */
   private async ensureSystemAccountExists(): Promise<void> {
     // Check if system account exists by trying to find it with system user ID
-    const existingAccount = await this.accountRepository.findByAccountIdAndUserId(
-      SystemAccountService.SYSTEM_ACCOUNT_ID,
-      SystemAccountService.SYSTEM_USER_ID,
-    );
+    const existingAccount =
+      await this.accountRepository.findByAccountIdAndUserId(
+        SystemAccountService.SYSTEM_ACCOUNT_ID,
+        SystemAccountService.SYSTEM_USER_ID,
+      );
 
     if (!existingAccount) {
       await this.createSystemAccount();
@@ -81,10 +85,12 @@ export class SystemAccountService implements OnModuleInit {
 
     const systemAccount = this.accountRepository.create(accountData);
     const savedAccount = await this.accountRepository.save(systemAccount);
-    
+
     console.log('✅ System account created for seed money operations');
-    console.log(`📊 Account ID: ${savedAccount.id}, Name: ${savedAccount.name}`);
-    
+    console.log(
+      `📊 Account ID: ${savedAccount.id}, Name: ${savedAccount.name}`,
+    );
+
     return savedAccount;
   }
 

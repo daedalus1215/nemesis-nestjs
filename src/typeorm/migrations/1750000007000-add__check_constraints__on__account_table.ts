@@ -1,6 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Add__check_constraints__on__account_table1750000007000 implements MigrationInterface {
+export class Add__check_constraints__on__account_table1750000007000
+  implements MigrationInterface
+{
   name = 'Add__check_constraints__on__account_table1750000007000';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

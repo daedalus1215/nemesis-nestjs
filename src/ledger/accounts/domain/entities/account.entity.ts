@@ -1,5 +1,13 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { IsString, IsNotEmpty, IsBoolean, IsNumber, IsEnum, Length, IsOptional, IsDate } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  IsBoolean,
+  IsNumber,
+  IsEnum,
+  Length,
+  IsDate,
+} from 'class-validator';
 
 export const ACCOUNT_TYPE = {
   ASSET: 'ASSET',
@@ -9,7 +17,7 @@ export const ACCOUNT_TYPE = {
   EXPENSE: 'EXPENSE',
 } as const;
 
-export type AccountType = typeof ACCOUNT_TYPE[keyof typeof ACCOUNT_TYPE];
+export type AccountType = (typeof ACCOUNT_TYPE)[keyof typeof ACCOUNT_TYPE];
 
 @Entity()
 export class Account {
@@ -20,7 +28,9 @@ export class Account {
   @Column({ length: 50 })
   @IsString()
   @IsNotEmpty({ message: 'Account name cannot be empty' })
-  @Length(1, 50, { message: 'Account name must be between 1 and 50 characters' })
+  @Length(1, 50, {
+    message: 'Account name must be between 1 and 50 characters',
+  })
   name: string;
 
   @Column({ default: false })
@@ -38,7 +48,8 @@ export class Account {
     default: ACCOUNT_TYPE.ASSET,
   })
   @IsEnum(Object.values(ACCOUNT_TYPE), {
-    message: 'Account type must be one of: ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE'
+    message:
+      'Account type must be one of: ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE',
   })
   accountType: AccountType;
 

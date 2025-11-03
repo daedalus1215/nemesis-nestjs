@@ -10,7 +10,7 @@ export class GetAccountByIdWithoutOwnershipTransactionScript {
     // This bypasses ownership checks - use carefully!
     // Only for validating account existence in cross-user operations
     return this.accountRepository['repository'].findOne({
-      where: { id: accountId }
+      where: { id: accountId },
     });
   }
 }

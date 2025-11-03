@@ -1,6 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Payment, PaymentCategory, PaymentCategoryType, PaymentStatus } from '../entities/payment.entity';
+import {
+  Payment,
+  PaymentCategory,
+  PaymentCategoryType,
+  PaymentStatus,
+} from '../entities/payment.entity';
 import { PaymentRepository } from '../../infra/repositories/payment.repository';
+import { CreatePaymentApplicationTransactionScript } from '../transaction-scripts/create-payment-application-TS/create-payment-application.transaction.script';
+import { PaymentApplication } from '../entities/payment-application.entity';
 
 export type CreatePaymentCommand = {
   debitAccountId: number;
@@ -16,6 +23,7 @@ export type CreatePaymentCommand = {
 export class PaymentAggregator {
   constructor(
     private readonly paymentRepository: PaymentRepository,
+    private readonly createPaymentApplicationTransactionScript: CreatePaymentApplicationTransactionScript,
   ) {}
 
   async getAccountBalance(accountId: number): Promise<number> {
@@ -33,11 +41,7 @@ export class PaymentAggregator {
     limit: number = 50,
     offset: number = 0,
   ): Promise<Payment[]> {
-    return this.paymentRepository.getAccountPayments(
-      accountId,
-      limit,
-      offset,
-    );
+    return this.paymentRepository.getAccountPayments(accountId, limit, offset);
   }
 
   /**
@@ -50,9 +54,7 @@ export class PaymentAggregator {
     return this.paymentRepository.getUserPayments(userId, limit);
   }
 
-  async createInitialPayment(
-    data: CreatePaymentCommand,
-  ): Promise<Payment> {
+  async createInitialPayment(data: CreatePaymentCommand): Promise<Payment> {
     // Validate business rules within this context
     if (data.debitAccountId === data.creditAccountId) {
       throw new Error('Cannot transfer to the same account');
@@ -78,16 +80,13 @@ export class PaymentAggregator {
    * Complete a pending payment
    */
   async completePayment(paymentId: number): Promise<Payment> {
-    const payment =
-      await this.paymentRepository.findById(paymentId);
+    const payment = await this.paymentRepository.findById(paymentId);
     if (!payment) {
       throw new Error('Payment not found');
     }
 
     if (payment.status !== PaymentStatus.PENDING) {
-      throw new Error(
-        `Cannot complete payment with status: ${payment.status}`,
-      );
+      throw new Error(`Cannot complete payment with status: ${payment.status}`);
     }
 
     payment.status = PaymentStatus.COMPLETED;
@@ -112,5 +111,20 @@ export class PaymentAggregator {
     totalCredits: number;
   }> {
     return this.paymentRepository.verifyDoubleEntryIntegrity();
+  }
+
+  /**
+   * Create a payment application linking a payment to an invoice
+   */
+  async createPaymentApplication(
+    paymentId: number,
+    invoiceId: number,
+    appliedAmount: number,
+  ): Promise<PaymentApplication> {
+    return await this.createPaymentApplicationTransactionScript.execute(
+      paymentId,
+      invoiceId,
+      appliedAmount,
+    );
   }
 }

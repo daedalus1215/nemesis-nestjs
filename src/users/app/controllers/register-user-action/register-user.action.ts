@@ -10,7 +10,7 @@ export class RegisterUserAction {
   constructor(
     private readonly service: UsersService,
     private readonly responder: RegisterUserResponder,
-  ) { }
+  ) {}
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)

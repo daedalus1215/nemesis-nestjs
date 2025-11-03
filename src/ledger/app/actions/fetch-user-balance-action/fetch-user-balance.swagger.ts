@@ -1,5 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
 export const FetchUserBalanceSwagger = () => {
   return applyDecorators(
@@ -7,7 +12,8 @@ export const FetchUserBalanceSwagger = () => {
     ApiBearerAuth(),
     ApiOperation({
       summary: 'Get user balance',
-      description: 'Retrieves the total balance across all accounts owned by the authenticated user.',
+      description:
+        'Retrieves the total balance across all accounts owned by the authenticated user.',
       tags: ['Account'],
     }),
     ApiResponse({
@@ -18,8 +24,8 @@ export const FetchUserBalanceSwagger = () => {
         properties: {
           totalBalance: { type: 'number', example: 2500.75 },
           userId: { type: 'number', example: 456 },
-          success: { type: 'boolean', example: true }
-        }
+          success: { type: 'boolean', example: true },
+        },
       },
       examples: {
         'Success Response': {
@@ -27,10 +33,10 @@ export const FetchUserBalanceSwagger = () => {
           value: {
             totalBalance: 2500.75,
             userId: 456,
-            success: true
-          }
-        }
-      }
+            success: true,
+          },
+        },
+      },
     }),
     ApiResponse({
       status: 401,
@@ -39,9 +45,9 @@ export const FetchUserBalanceSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 401 },
-          message: { type: 'string', example: 'Unauthorized' }
-        }
-      }
+          message: { type: 'string', example: 'Unauthorized' },
+        },
+      },
     }),
     ApiResponse({
       status: 500,
@@ -50,9 +56,9 @@ export const FetchUserBalanceSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 500 },
-          message: { type: 'string', example: 'Internal server error' }
-        }
-      }
-    })
+          message: { type: 'string', example: 'Internal server error' },
+        },
+      },
+    }),
   );
 };

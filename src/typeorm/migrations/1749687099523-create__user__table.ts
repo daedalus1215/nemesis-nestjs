@@ -4,7 +4,6 @@ export class Create__user__table1749687099523 implements MigrationInterface {
   name = 'Create__user__table1749687099523';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-
     await queryRunner.query(`
       CREATE TABLE "user" (
         "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

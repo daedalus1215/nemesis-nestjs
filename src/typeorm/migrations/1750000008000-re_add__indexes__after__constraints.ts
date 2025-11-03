@@ -1,6 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Re_add__indexes__after__constraints1750000008000 implements MigrationInterface {
+export class Re_add__indexes__after__constraints1750000008000
+  implements MigrationInterface
+{
   name = 'Re_add__indexes__after__constraints1750000008000';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -46,10 +48,14 @@ export class Re_add__indexes__after__constraints1750000008000 implements Migrati
       CREATE INDEX "IDX_transaction_category" ON "transaction" ("category")
     `);
 
-    console.log('✅ All performance indexes re-added after constraint migrations');
+    console.log(
+      '✅ All performance indexes re-added after constraint migrations',
+    );
     console.log('📊 Account table: 3 indexes');
     console.log('💰 Transaction table: 6 indexes');
-    console.log('🚀 Database optimized for double-entry bookkeeping performance');
+    console.log(
+      '🚀 Database optimized for double-entry bookkeeping performance',
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

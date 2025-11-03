@@ -1,5 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiParam, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
 export const FetchAccountByIdSwagger = () => {
   return applyDecorators(
@@ -7,7 +13,8 @@ export const FetchAccountByIdSwagger = () => {
     ApiBearerAuth(),
     ApiOperation({
       summary: 'Get user account by id',
-      description: 'Retrieves detailed information about a specific account owned by the authenticated user.',
+      description:
+        'Retrieves detailed information about a specific account owned by the authenticated user.',
       tags: ['Account'],
     }),
     ApiParam({
@@ -26,8 +33,12 @@ export const FetchAccountByIdSwagger = () => {
           name: { type: 'string', example: 'My Savings Account' },
           accountType: { type: 'string', example: 'ASSET' },
           isDefault: { type: 'boolean', example: false },
-          createdAt: { type: 'string', format: 'date-time', example: '2024-01-15T10:30:00Z' }
-        }
+          createdAt: {
+            type: 'string',
+            format: 'date-time',
+            example: '2024-01-15T10:30:00Z',
+          },
+        },
       },
       examples: {
         'Success Response': {
@@ -37,10 +48,10 @@ export const FetchAccountByIdSwagger = () => {
             name: 'My Savings Account',
             accountType: 'ASSET',
             isDefault: false,
-            createdAt: '2024-01-15T10:30:00Z'
-          }
-        }
-      }
+            createdAt: '2024-01-15T10:30:00Z',
+          },
+        },
+      },
     }),
     ApiResponse({
       status: 400,
@@ -49,10 +60,13 @@ export const FetchAccountByIdSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 400 },
-          message: { type: 'string', example: 'Validation failed (numeric string is expected)' },
-          error: { type: 'string', example: 'Bad Request' }
-        }
-      }
+          message: {
+            type: 'string',
+            example: 'Validation failed (numeric string is expected)',
+          },
+          error: { type: 'string', example: 'Bad Request' },
+        },
+      },
     }),
     ApiResponse({
       status: 401,
@@ -61,9 +75,9 @@ export const FetchAccountByIdSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 401 },
-          message: { type: 'string', example: 'Unauthorized' }
-        }
-      }
+          message: { type: 'string', example: 'Unauthorized' },
+        },
+      },
     }),
     ApiResponse({
       status: 403,
@@ -72,9 +86,9 @@ export const FetchAccountByIdSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 403 },
-          message: { type: 'string', example: 'Access denied to this account' }
-        }
-      }
+          message: { type: 'string', example: 'Access denied to this account' },
+        },
+      },
     }),
     ApiResponse({
       status: 404,
@@ -83,9 +97,9 @@ export const FetchAccountByIdSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 404 },
-          message: { type: 'string', example: 'Account not found' }
-        }
-      }
+          message: { type: 'string', example: 'Account not found' },
+        },
+      },
     }),
     ApiResponse({
       status: 500,
@@ -94,9 +108,9 @@ export const FetchAccountByIdSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 500 },
-          message: { type: 'string', example: 'Internal server error' }
-        }
-      }
-    })
+          message: { type: 'string', example: 'Internal server error' },
+        },
+      },
+    }),
   );
 };

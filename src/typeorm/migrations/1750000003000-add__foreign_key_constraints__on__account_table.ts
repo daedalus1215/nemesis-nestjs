@@ -1,6 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Add__foreign_key_constraints__on__account_table1750000003000 implements MigrationInterface {
+export class Add__foreign_key_constraints__on__account_table1750000003000
+  implements MigrationInterface
+{
   name = 'Add__foreign_key_constraints__on__account_table1750000003000';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

@@ -1,14 +1,16 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Alter_AccountColumn_PaymentsTable1762047554470 implements MigrationInterface {
-    name = 'Alter_AccountColumn_PaymentsTable1762047554470'
+export class Alter_AccountColumn_PaymentsTable1762047554470
+  implements MigrationInterface
+{
+  name = 'Alter_AccountColumn_PaymentsTable1762047554470';
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
-        // SQLite doesn't support ALTER TABLE RENAME COLUMN directly,
-        // so we need to create a new table, copy data, drop old table, and rename
-        
-        // Step 1: Create new table with renamed columns
-        await queryRunner.query(`
+  public async up(queryRunner: QueryRunner): Promise<void> {
+    // SQLite doesn't support ALTER TABLE RENAME COLUMN directly,
+    // so we need to create a new table, copy data, drop old table, and rename
+
+    // Step 1: Create new table with renamed columns
+    await queryRunner.query(`
             CREATE TABLE "payments_new" (
                 "id" varchar PRIMARY KEY NOT NULL,
                 "amount" decimal(12,2) NOT NULL,
@@ -24,8 +26,8 @@ export class Alter_AccountColumn_PaymentsTable1762047554470 implements Migration
             )
         `);
 
-        // Step 2: Copy all data from old table to new table
-        await queryRunner.query(`
+    // Step 2: Copy all data from old table to new table
+    await queryRunner.query(`
             INSERT INTO "payments_new" (
                 "id",
                 "amount",
@@ -54,20 +56,22 @@ export class Alter_AccountColumn_PaymentsTable1762047554470 implements Migration
             FROM "payments"
         `);
 
-        // Step 3: Drop the old table
-        await queryRunner.query(`DROP TABLE "payments"`);
+    // Step 3: Drop the old table
+    await queryRunner.query(`DROP TABLE "payments"`);
 
-        // Step 4: Rename the new table to the original name
-        await queryRunner.query(`ALTER TABLE "payments_new" RENAME TO "payments"`);
+    // Step 4: Rename the new table to the original name
+    await queryRunner.query(`ALTER TABLE "payments_new" RENAME TO "payments"`);
 
-        console.log('✅ Successfully renamed debitAccountId -> debit_account_id and creditAccountId -> credit_account_id');
-    }
+    console.log(
+      '✅ Successfully renamed debitAccountId -> debit_account_id and creditAccountId -> credit_account_id',
+    );
+  }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-        // Reverse the process: rename back to camelCase
-        
-        // Step 1: Create new table with old column names
-        await queryRunner.query(`
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    // Reverse the process: rename back to camelCase
+
+    // Step 1: Create new table with old column names
+    await queryRunner.query(`
             CREATE TABLE "payments_old" (
                 "id" varchar PRIMARY KEY NOT NULL,
                 "amount" decimal(12,2) NOT NULL,
@@ -83,8 +87,8 @@ export class Alter_AccountColumn_PaymentsTable1762047554470 implements Migration
             )
         `);
 
-        // Step 2: Copy all data from new table to old table format
-        await queryRunner.query(`
+    // Step 2: Copy all data from new table to old table format
+    await queryRunner.query(`
             INSERT INTO "payments_old" (
                 "id",
                 "amount",
@@ -113,13 +117,14 @@ export class Alter_AccountColumn_PaymentsTable1762047554470 implements Migration
             FROM "payments"
         `);
 
-        // Step 3: Drop the new table
-        await queryRunner.query(`DROP TABLE "payments"`);
+    // Step 3: Drop the new table
+    await queryRunner.query(`DROP TABLE "payments"`);
 
-        // Step 4: Rename the old table back
-        await queryRunner.query(`ALTER TABLE "payments_old" RENAME TO "payments"`);
+    // Step 4: Rename the old table back
+    await queryRunner.query(`ALTER TABLE "payments_old" RENAME TO "payments"`);
 
-        console.log('✅ Rolled back: renamed debit_account_id -> debitAccountId and credit_account_id -> creditAccountId');
-    }
+    console.log(
+      '✅ Rolled back: renamed debit_account_id -> debitAccountId and credit_account_id -> creditAccountId',
+    );
+  }
 }
-

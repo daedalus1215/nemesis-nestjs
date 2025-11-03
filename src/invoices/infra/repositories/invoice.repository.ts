@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
-import { Invoice, INVOICE_STATUS } from '../../domain/entities/invoice.entity';
+import {
+  Invoice,
+  INVOICE_STATUS,
+  InvoiceStatusType,
+} from '../../domain/entities/invoice.entity';
 
 @Injectable()
 export class InvoiceRepository {
@@ -49,5 +53,36 @@ export class InvoiceRepository {
       order: { dueDate: 'DESC' },
     });
   }
-}
 
+  async findByUserIdWithStatusFilter(
+    userId: number,
+    statuses?: InvoiceStatusType[],
+  ): Promise<Invoice[]> {
+    return this.repository.find({
+      where: [
+        {
+          issuerUserId: userId,
+          ...(statuses && statuses.length > 0 ? { status: In(statuses) } : {}),
+        },
+        {
+          debtorUserId: userId,
+          ...(statuses && statuses.length > 0 ? { status: In(statuses) } : {}),
+        },
+      ],
+      order: { dueDate: 'DESC' },
+    });
+  }
+
+  async create(invoice: Partial<Invoice>): Promise<Invoice> {
+    const newInvoice = this.repository.create(invoice);
+    return this.repository.save(newInvoice);
+  }
+
+  async findById(id: number): Promise<Invoice | null> {
+    return this.repository.findOne({ where: { id } });
+  }
+
+  async update(invoice: Invoice): Promise<Invoice> {
+    return this.repository.save(invoice);
+  }
+}

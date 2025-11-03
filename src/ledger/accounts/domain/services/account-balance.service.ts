@@ -18,7 +18,10 @@ export class AccountBalanceService {
     userId: number,
   ): Promise<number> {
     // 1. Validate account ownership using AccountAggregator
-    const account = await this.accountAggregator.getAccountById(accountId, userId);
+    const account = await this.accountAggregator.getAccountById(
+      accountId,
+      userId,
+    );
     if (!account) {
       throw new Error(
         `Account ${accountId} not found or does not belong to user`,
