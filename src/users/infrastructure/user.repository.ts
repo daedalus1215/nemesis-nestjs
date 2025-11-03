@@ -20,9 +20,9 @@ export class UserRepository {
   }
 
   async findByUsernameWithPassword(username: string): Promise<User | null> {
-    return this.repository.findOne({ 
+    return this.repository.findOne({
       where: { username },
-      select: ['id', 'username', 'password']
+      select: ['id', 'username', 'password'],
     });
   }
 

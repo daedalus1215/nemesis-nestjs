@@ -1,5 +1,12 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
 export const FetchAccountPaymentHistorySwagger = () => {
   return applyDecorators(
@@ -7,7 +14,8 @@ export const FetchAccountPaymentHistorySwagger = () => {
     ApiBearerAuth(),
     ApiOperation({
       summary: 'Get account transaction history',
-      description: 'Retrieves the payment/transaction history for a specific account owned by the authenticated user with pagination support.',
+      description:
+        'Retrieves the payment/transaction history for a specific account owned by the authenticated user with pagination support.',
       tags: ['Account'],
     }),
     ApiParam({
@@ -39,7 +47,7 @@ export const FetchAccountPaymentHistorySwagger = () => {
           transactions: {
             type: 'array',
             items: { type: 'object' },
-            description: 'Array of transaction objects'
+            description: 'Array of transaction objects',
           },
           currentBalance: { type: 'number', example: 1500.75 },
           accountInfo: {
@@ -47,11 +55,11 @@ export const FetchAccountPaymentHistorySwagger = () => {
             properties: {
               id: { type: 'number', example: 123 },
               name: { type: 'string', example: 'My Savings Account' },
-              accountType: { type: 'string', example: 'ASSET' }
-            }
+              accountType: { type: 'string', example: 'ASSET' },
+            },
           },
-          success: { type: 'boolean', example: true }
-        }
+          success: { type: 'boolean', example: true },
+        },
       },
       examples: {
         'Success Response': {
@@ -60,21 +68,21 @@ export const FetchAccountPaymentHistorySwagger = () => {
             transactions: [
               {
                 id: 'txn_123',
-                amount: 100.50,
+                amount: 100.5,
                 description: 'Transfer from checking',
-                createdAt: '2024-01-15T10:30:00Z'
-              }
+                createdAt: '2024-01-15T10:30:00Z',
+              },
             ],
             currentBalance: 1500.75,
             accountInfo: {
               id: 123,
               name: 'My Savings Account',
-              accountType: 'ASSET'
+              accountType: 'ASSET',
             },
-            success: true
-          }
-        }
-      }
+            success: true,
+          },
+        },
+      },
     }),
     ApiResponse({
       status: 400,
@@ -84,9 +92,9 @@ export const FetchAccountPaymentHistorySwagger = () => {
         properties: {
           statusCode: { type: 'number', example: 400 },
           message: { type: 'string', example: 'Validation failed' },
-          error: { type: 'string', example: 'Bad Request' }
-        }
-      }
+          error: { type: 'string', example: 'Bad Request' },
+        },
+      },
     }),
     ApiResponse({
       status: 401,
@@ -95,9 +103,9 @@ export const FetchAccountPaymentHistorySwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 401 },
-          message: { type: 'string', example: 'Unauthorized' }
-        }
-      }
+          message: { type: 'string', example: 'Unauthorized' },
+        },
+      },
     }),
     ApiResponse({
       status: 403,
@@ -106,9 +114,9 @@ export const FetchAccountPaymentHistorySwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 403 },
-          message: { type: 'string', example: 'Access denied to this account' }
-        }
-      }
+          message: { type: 'string', example: 'Access denied to this account' },
+        },
+      },
     }),
     ApiResponse({
       status: 404,
@@ -117,9 +125,9 @@ export const FetchAccountPaymentHistorySwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 404 },
-          message: { type: 'string', example: 'Account not found' }
-        }
-      }
+          message: { type: 'string', example: 'Account not found' },
+        },
+      },
     }),
     ApiResponse({
       status: 500,
@@ -128,9 +136,9 @@ export const FetchAccountPaymentHistorySwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 500 },
-          message: { type: 'string', example: 'Internal server error' }
-        }
-      }
-    })
+          message: { type: 'string', example: 'Internal server error' },
+        },
+      },
+    }),
   );
 };

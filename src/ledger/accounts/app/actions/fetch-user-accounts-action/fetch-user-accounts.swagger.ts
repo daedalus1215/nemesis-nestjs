@@ -1,5 +1,10 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
 export const FetchUserAccountsSwagger = () => {
   return applyDecorators(
@@ -25,12 +30,16 @@ export const FetchUserAccountsSwagger = () => {
                 name: { type: 'string', example: 'My Savings Account' },
                 accountType: { type: 'string', example: 'ASSET' },
                 isDefault: { type: 'boolean', example: false },
-                createdAt: { type: 'string', format: 'date-time', example: '2024-01-15T10:30:00Z' }
-              }
-            }
+                createdAt: {
+                  type: 'string',
+                  format: 'date-time',
+                  example: '2024-01-15T10:30:00Z',
+                },
+              },
+            },
           },
-          success: { type: 'boolean', example: true }
-        }
+          success: { type: 'boolean', example: true },
+        },
       },
       examples: {
         'Success Response': {
@@ -42,20 +51,20 @@ export const FetchUserAccountsSwagger = () => {
                 name: 'My Savings Account',
                 accountType: 'ASSET',
                 isDefault: false,
-                createdAt: '2024-01-15T10:30:00Z'
+                createdAt: '2024-01-15T10:30:00Z',
               },
               {
                 id: 124,
                 name: 'My Checking Account',
                 accountType: 'ASSET',
                 isDefault: true,
-                createdAt: '2024-01-10T09:15:00Z'
-              }
+                createdAt: '2024-01-10T09:15:00Z',
+              },
             ],
-            success: true
-          }
-        }
-      }
+            success: true,
+          },
+        },
+      },
     }),
     ApiResponse({
       status: 401,
@@ -64,9 +73,9 @@ export const FetchUserAccountsSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 401 },
-          message: { type: 'string', example: 'Unauthorized' }
-        }
-      }
+          message: { type: 'string', example: 'Unauthorized' },
+        },
+      },
     }),
     ApiResponse({
       status: 500,
@@ -75,9 +84,9 @@ export const FetchUserAccountsSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 500 },
-          message: { type: 'string', example: 'Internal server error' }
-        }
-      }
-    })
+          message: { type: 'string', example: 'Internal server error' },
+        },
+      },
+    }),
   );
 };

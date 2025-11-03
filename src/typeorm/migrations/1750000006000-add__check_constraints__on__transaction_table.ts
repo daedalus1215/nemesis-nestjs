@@ -1,6 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Add__check_constraints__on__transaction_table1750000006000 implements MigrationInterface {
+export class Add__check_constraints__on__transaction_table1750000006000
+  implements MigrationInterface
+{
   name = 'Add__check_constraints__on__transaction_table1750000006000';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -39,7 +41,9 @@ export class Add__check_constraints__on__transaction_table1750000006000 implemen
 
     // Replace old table
     await queryRunner.query(`DROP TABLE "transaction"`);
-    await queryRunner.query(`ALTER TABLE "transaction_new" RENAME TO "transaction"`);
+    await queryRunner.query(
+      `ALTER TABLE "transaction_new" RENAME TO "transaction"`,
+    );
 
     console.log('✅ Business rule constraints added to transaction table:');
     console.log('  - Amount must be positive');
@@ -72,7 +76,9 @@ export class Add__check_constraints__on__transaction_table1750000006000 implemen
     `);
 
     await queryRunner.query(`DROP TABLE "transaction"`);
-    await queryRunner.query(`ALTER TABLE "transaction_new" RENAME TO "transaction"`);
+    await queryRunner.query(
+      `ALTER TABLE "transaction_new" RENAME TO "transaction"`,
+    );
 
     console.log('❌ Business rule constraints removed from transaction table');
   }

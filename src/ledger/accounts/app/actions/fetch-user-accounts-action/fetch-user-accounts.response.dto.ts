@@ -1,4 +1,3 @@
-
 export type FetchUserAccountsResponseDto = {
   accounts: UserAccountDto[];
   success: boolean;
@@ -11,5 +10,3 @@ type UserAccountDto = {
   isDefault: boolean;
   createdAt: Date;
 };
-
-

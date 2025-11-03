@@ -1,7 +1,12 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { CreateAccountRequestDto } from './create-account.request.dto';
-import { AccountResponseDto } from './create-account.response.dto';
 
 export const CreateAccountSwagger = () => {
   return applyDecorators(
@@ -9,7 +14,8 @@ export const CreateAccountSwagger = () => {
     ApiBearerAuth(),
     ApiOperation({
       summary: 'Create an account',
-      description: 'Creates a new account for the authenticated user. The account can be of different types (ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE) with ASSET being the default type.',
+      description:
+        'Creates a new account for the authenticated user. The account can be of different types (ASSET, LIABILITY, EQUITY, REVENUE, EXPENSE) with ASSET being the default type.',
       tags: ['Account'],
     }),
     ApiBody({
@@ -21,25 +27,26 @@ export const CreateAccountSwagger = () => {
           description: 'Creates a new asset account with a custom name',
           value: {
             name: 'My Savings Account',
-            accountType: 'ASSET'
-          }
+            accountType: 'ASSET',
+          },
         },
         'Liability Account': {
           summary: 'Create a liability account',
           description: 'Creates a new liability account',
           value: {
             name: 'Credit Card Debt',
-            accountType: 'LIABILITY'
-          }
+            accountType: 'LIABILITY',
+          },
         },
         'Default Type': {
           summary: 'Create account with default type',
-          description: 'Creates an account without specifying type (defaults to ASSET)',
+          description:
+            'Creates an account without specifying type (defaults to ASSET)',
           value: {
-            name: 'Emergency Fund'
-          }
-        }
-      }
+            name: 'Emergency Fund',
+          },
+        },
+      },
     }),
     ApiResponse({
       status: 201,
@@ -51,8 +58,8 @@ export const CreateAccountSwagger = () => {
           name: { type: 'string', example: 'My Savings Account' },
           accountType: { type: 'string', example: 'ASSET' },
           isDefault: { type: 'boolean', example: false },
-          success: { type: 'boolean', example: true }
-        }
+          success: { type: 'boolean', example: true },
+        },
       },
       examples: {
         'Success Response': {
@@ -62,10 +69,10 @@ export const CreateAccountSwagger = () => {
             name: 'My Savings Account',
             accountType: 'ASSET',
             isDefault: false,
-            success: true
-          }
-        }
-      }
+            success: true,
+          },
+        },
+      },
     }),
     ApiResponse({
       status: 400,
@@ -74,14 +81,17 @@ export const CreateAccountSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 400 },
-          message: { 
-            type: 'array', 
+          message: {
+            type: 'array',
             items: { type: 'string' },
-            example: ['name should not be empty', 'name must be shorter than or equal to 50 characters']
+            example: [
+              'name should not be empty',
+              'name must be shorter than or equal to 50 characters',
+            ],
           },
-          error: { type: 'string', example: 'Bad Request' }
-        }
-      }
+          error: { type: 'string', example: 'Bad Request' },
+        },
+      },
     }),
     ApiResponse({
       status: 401,
@@ -90,9 +100,9 @@ export const CreateAccountSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 401 },
-          message: { type: 'string', example: 'Unauthorized' }
-        }
-      }
+          message: { type: 'string', example: 'Unauthorized' },
+        },
+      },
     }),
     ApiResponse({
       status: 500,
@@ -101,9 +111,9 @@ export const CreateAccountSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 500 },
-          message: { type: 'string', example: 'Internal server error' }
-        }
-      }
-    })
+          message: { type: 'string', example: 'Internal server error' },
+        },
+      },
+    }),
   );
 };

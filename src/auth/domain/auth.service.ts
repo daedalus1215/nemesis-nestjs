@@ -16,10 +16,10 @@ export class AuthService {
     password: string,
   ): Promise<Omit<User, 'password'> | null> {
     const user = await this.usersService.findByUsernameWithPassword(username);
-    console.log('user retrieved from db upon login', user);
+
     if (user && (await bcrypt.compare(password, user.password))) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: _, ...result } = user;
-      console.log('result', result);
       return result;
     }
     return null;

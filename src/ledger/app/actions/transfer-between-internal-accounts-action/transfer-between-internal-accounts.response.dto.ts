@@ -1,5 +1,5 @@
 export type TransferResponseDto = {
-  transactionId: string;
+  transactionId: number;
   fromAccountId: number;
   toAccountId: number;
   amount: number;

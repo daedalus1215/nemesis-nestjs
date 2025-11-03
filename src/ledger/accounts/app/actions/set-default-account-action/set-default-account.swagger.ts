@@ -1,5 +1,11 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiParam, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 
 export const SetDefaultAccountSwagger = () => {
   return applyDecorators(
@@ -7,7 +13,8 @@ export const SetDefaultAccountSwagger = () => {
     ApiBearerAuth(),
     ApiOperation({
       summary: 'Set default account',
-      description: 'Sets a specific account as the default account for the authenticated user.',
+      description:
+        'Sets a specific account as the default account for the authenticated user.',
       tags: ['Account'],
     }),
     ApiParam({
@@ -23,18 +30,21 @@ export const SetDefaultAccountSwagger = () => {
         type: 'object',
         properties: {
           success: { type: 'boolean', example: true },
-          message: { type: 'string', example: 'Default account updated successfully' }
-        }
+          message: {
+            type: 'string',
+            example: 'Default account updated successfully',
+          },
+        },
       },
       examples: {
         'Success Response': {
           summary: 'Default account set',
           value: {
             success: true,
-            message: 'Default account updated successfully'
-          }
-        }
-      }
+            message: 'Default account updated successfully',
+          },
+        },
+      },
     }),
     ApiResponse({
       status: 400,
@@ -43,10 +53,13 @@ export const SetDefaultAccountSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 400 },
-          message: { type: 'string', example: 'Validation failed (numeric string is expected)' },
-          error: { type: 'string', example: 'Bad Request' }
-        }
-      }
+          message: {
+            type: 'string',
+            example: 'Validation failed (numeric string is expected)',
+          },
+          error: { type: 'string', example: 'Bad Request' },
+        },
+      },
     }),
     ApiResponse({
       status: 401,
@@ -55,9 +68,9 @@ export const SetDefaultAccountSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 401 },
-          message: { type: 'string', example: 'Unauthorized' }
-        }
-      }
+          message: { type: 'string', example: 'Unauthorized' },
+        },
+      },
     }),
     ApiResponse({
       status: 403,
@@ -66,9 +79,9 @@ export const SetDefaultAccountSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 403 },
-          message: { type: 'string', example: 'Access denied to this account' }
-        }
-      }
+          message: { type: 'string', example: 'Access denied to this account' },
+        },
+      },
     }),
     ApiResponse({
       status: 404,
@@ -77,9 +90,9 @@ export const SetDefaultAccountSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 404 },
-          message: { type: 'string', example: 'Account not found' }
-        }
-      }
+          message: { type: 'string', example: 'Account not found' },
+        },
+      },
     }),
     ApiResponse({
       status: 500,
@@ -88,9 +101,9 @@ export const SetDefaultAccountSwagger = () => {
         type: 'object',
         properties: {
           statusCode: { type: 'number', example: 500 },
-          message: { type: 'string', example: 'Internal server error' }
-        }
-      }
-    })
+          message: { type: 'string', example: 'Internal server error' },
+        },
+      },
+    }),
   );
 };

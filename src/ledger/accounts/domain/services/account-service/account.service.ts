@@ -18,7 +18,7 @@ export class AccountService {
     private readonly setDefaultAccountTS: SetDefaultAccountTransactionScript,
     private readonly ensureUserHasDefaultAccountInvariant: EnsureUserHasDefaultAccountInvariant,
     private readonly accountRepository: AccountRepository,
-    private readonly accountAggregator: AccountAggregator
+    private readonly accountAggregator: AccountAggregator,
   ) {}
 
   async getUserAccounts(userId: number): Promise<Account[]> {

@@ -21,7 +21,7 @@ export class PaymentRepository implements PaymentRepositoryPort {
     return this.repository.save(payment);
   }
 
-  async findById(id: string): Promise<Payment | null> {
+  async findById(id: number): Promise<Payment | null> {
     return this.repository.findOne({ where: { id } });
   }
 
@@ -55,6 +55,7 @@ export class PaymentRepository implements PaymentRepositoryPort {
 
   async getAccountCompletedPayments(
     accountId: number,
+
     limit: number = 50,
     offset: number = 0,
   ): Promise<Payment[]> {
@@ -65,6 +66,23 @@ export class PaymentRepository implements PaymentRepositoryPort {
         { accountId },
       )
       .andWhere('payment.status = :status', { status: PaymentStatus.COMPLETED })
+      .orderBy('payment.createdAt', 'DESC')
+      .limit(limit)
+      .offset(offset)
+      .getMany();
+  }
+
+  async getAccountPayments(
+    accountId: number,
+    limit: number = 50,
+    offset: number = 0,
+  ): Promise<Payment[]> {
+    return this.repository
+      .createQueryBuilder('payment')
+      .where(
+        '(payment.debitAccountId = :accountId OR payment.creditAccountId = :accountId)',
+        { accountId },
+      )
       .orderBy('payment.createdAt', 'DESC')
       .limit(limit)
       .offset(offset)
@@ -82,7 +100,7 @@ export class PaymentRepository implements PaymentRepositoryPort {
     return this.repository
       .createQueryBuilder('payment')
       .where(
-        '(payment.initiatingUserId = :userId OR payment.counterpartyUserId = :userId)',
+        '(payment.payerUserId = :userId OR payment.payeeUserId = :userId)',
         { userId },
       )
       .andWhere('payment.status = :status', { status: PaymentStatus.COMPLETED })

@@ -5,7 +5,8 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LedgerModule } from './ledger/ledger.module';
 import { AccountsModule } from './ledger/accounts/accounts.module';
-import { TransactionsModule } from './payments/payment.module';
+import { PaymentsModule } from './payments/payment.module';
+import { InvoicesModule } from './invoices/invoices.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -28,14 +29,15 @@ import * as Joi from 'joi';
         database: configService.get<string>('DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: false,
-        logging: true
+        logging: true,
       }),
       inject: [ConfigService],
     }),
     UsersModule,
     AccountsModule,
-    TransactionsModule,
+    PaymentsModule,
     LedgerModule,
+    InvoicesModule,
     AuthModule,
   ],
   controllers: [],

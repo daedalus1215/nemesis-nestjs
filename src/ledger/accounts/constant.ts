@@ -6,4 +6,4 @@ export const AccountType = {
   EXPENSE: 'EXPENSE',
 } as const;
 
-export type AccountType = typeof AccountType[keyof typeof AccountType];
+export type AccountType = (typeof AccountType)[keyof typeof AccountType];
