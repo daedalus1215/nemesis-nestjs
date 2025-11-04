@@ -3,10 +3,11 @@ export type FetchUserAccountsResponseDto = {
   success: boolean;
 };
 
-type UserAccountDto = {
+export type UserAccountDto = {
   id: number;
   name: string;
   accountType: string;
   isDefault: boolean;
   createdAt: Date;
+  balance: number;
 };

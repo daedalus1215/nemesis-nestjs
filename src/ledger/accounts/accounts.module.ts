@@ -16,6 +16,7 @@ import { FetchUserBalanceAction } from '../app/actions/fetch-user-balance-action
 import { FetchAccountBalanceAction } from './app/actions/fetch-account-balance-action/fetch-account-balance.action';
 import { TransferBetweenExternalAccountsAction } from '../app/actions/transfer-between-external-accounts-action/transfer-between-external-accounts.action';
 import { FetchAccountPaymentHistoryAction } from '../app/actions/fetch-account-payment-history-action/fetch-account-payment-history.action';
+import { FetchUserAccountsResponder } from './app/actions/fetch-user-accounts-action/fetch-user-accounts.responder';
 // Transaction Scripts
 import { GetUserAccountsTransactionScript } from './domain/transaction-scripts/get-user-accounts-TS/get-user-accounts.transaction.script';
 import { GetAccountByIdTransactionScript } from './domain/transaction-scripts/get-account-by-id-TS/get-account-by-id.transaction.script';
@@ -45,6 +46,7 @@ import { TransferBetweenInternalAccountsAction } from '../app/actions/transfer-b
     AccountAggregator,
     AccountBalanceService,
     SystemAccountService, // Added for system account management
+    FetchUserAccountsResponder,
   ],
   controllers: [
     CreateAccountAction,
