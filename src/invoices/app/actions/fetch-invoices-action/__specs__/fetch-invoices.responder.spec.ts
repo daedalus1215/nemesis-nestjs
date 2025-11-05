@@ -50,6 +50,7 @@ describe('FetchInvoicesResponder', () => {
         status: invoice.status,
         issueDate: invoice.issueDate,
         dueDate: invoice.dueDate,
+        description: invoice.description,
       });
       expect(result.success).toBe(true);
     });
@@ -132,6 +133,29 @@ describe('FetchInvoicesResponder', () => {
 
       // Assert
       expect(result.success).toBe(true);
+    });
+
+    it('should map description when present', () => {
+      // Arrange
+      const description = 'Test invoice description';
+      const invoice = createMockInvoice({ description });
+
+      // Act
+      const result = target.apply([invoice]);
+
+      // Assert
+      expect(result.invoices[0].description).toBe(description);
+    });
+
+    it('should map undefined description when not present', () => {
+      // Arrange
+      const invoice = createMockInvoice({ description: undefined });
+
+      // Act
+      const result = target.apply([invoice]);
+
+      // Assert
+      expect(result.invoices[0].description).toBeUndefined();
     });
   });
 });

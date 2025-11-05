@@ -24,6 +24,7 @@ export class FetchInvoicesResponder {
       status: invoice.status,
       issueDate: invoice.issueDate,
       dueDate: invoice.dueDate,
+      description: invoice.description,
     };
   }
 }

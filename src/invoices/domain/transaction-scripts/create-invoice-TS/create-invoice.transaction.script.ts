@@ -35,6 +35,7 @@ export class CreateInvoiceTransactionScript {
       status: INVOICE_STATUS.SENT,
       issueDate,
       dueDate,
+      description: dto.description,
     });
 
     return invoice;
