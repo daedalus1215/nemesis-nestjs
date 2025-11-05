@@ -12,4 +12,5 @@ export type InvoiceDto = {
   status: string;
   issueDate: Date;
   dueDate: Date;
+  description?: string;
 };

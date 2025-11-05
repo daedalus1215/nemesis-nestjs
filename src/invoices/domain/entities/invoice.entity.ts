@@ -35,4 +35,7 @@ export class Invoice {
 
   @Column({ name: 'due_date', type: 'date' })
   dueDate: Date;
+
+  @Column({ name: 'description', type: 'varchar', nullable: true })
+  description?: string;
 }

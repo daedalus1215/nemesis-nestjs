@@ -56,6 +56,7 @@ describe('CreateInvoiceTransactionScript', () => {
         status: INVOICE_STATUS.SENT,
         issueDate: new Date(),
         dueDate: new Date(dto.dueDate),
+        description: dto.description,
       });
       invoiceRepository.create.mockResolvedValue(mockInvoice);
 
@@ -73,6 +74,7 @@ describe('CreateInvoiceTransactionScript', () => {
           status: INVOICE_STATUS.SENT,
           issueDate: expect.any(Date),
           dueDate: expect.any(Date),
+          description: dto.description,
         }),
       );
       const callArgs = invoiceRepository.create.mock.calls[0][0];
@@ -131,7 +133,11 @@ describe('CreateInvoiceTransactionScript', () => {
       await target.execute(dto, issuerUserId);
 
       // Assert
-      expect(invoiceRepository.create).toHaveBeenCalled();
+      expect(invoiceRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          description: undefined,
+        }),
+      );
     });
 
     it('should throw error when due date is in the past', async () => {
