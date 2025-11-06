@@ -11,6 +11,8 @@ import { CreateInvoiceAction } from './app/actions/create-invoice-action/create-
 import { CreateInvoiceResponder } from './app/actions/create-invoice-action/create-invoice.responder';
 import { FetchInvoicesAction } from './app/actions/fetch-invoices-action/fetch-invoices.action';
 import { FetchInvoicesResponder } from './app/actions/fetch-invoices-action/fetch-invoices.responder';
+import { FetchInvoiceByIdAction } from './app/actions/fetch-invoice-by-id-action/fetch-invoice-by-id.action';
+import { FetchInvoiceByIdResponder } from './app/actions/fetch-invoice-by-id-action/fetch-invoice-by-id.responder';
 import { PayInvoiceAction } from './app/actions/pay-invoice-action/pay-invoice.action';
 import { PayInvoiceResponder } from './app/actions/pay-invoice-action/pay-invoice.responder';
 import { InvoiceAppService } from './app/app-service/invoice.app.service';
@@ -28,11 +30,13 @@ import { PaymentsModule } from '../payments/payment.module';
     InvoiceAppService,
     CreateInvoiceResponder,
     FetchInvoicesResponder,
+    FetchInvoiceByIdResponder,
     PayInvoiceResponder,
   ],
   controllers: [
     CreateInvoiceAction,
     FetchInvoicesAction,
+    FetchInvoiceByIdAction,
     PayInvoiceAction,
   ],
   exports: [InvoiceService],
