@@ -25,7 +25,7 @@ import * as Joi from 'joi';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        type: 'sqlite',
+        type: 'better-sqlite3',
         database: configService.get<string>('DATABASE'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: false,

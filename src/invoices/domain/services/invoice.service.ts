@@ -3,8 +3,10 @@ import { CreateInvoiceTransactionScript } from '../transaction-scripts/create-in
 import { FetchInvoicesTransactionScript } from '../transaction-scripts/fetch-invoices-TS/fetch-invoices.transaction.script';
 import { GetInvoiceByIdTransactionScript } from '../transaction-scripts/get-invoice-by-id-TS/get-invoice-by-id.transaction.script';
 import { UpdateInvoiceStatusTransactionScript } from '../transaction-scripts/update-invoice-status-TS/update-invoice-status.transaction.script';
+import { CancelInvoiceTransactionScript } from '../transaction-scripts/cancel-invoice-TS/cancel-invoice.transaction.script';
 import { Invoice, InvoiceStatusType, INVOICE_STATUS } from '../entities/invoice.entity';
 import { CreateInvoiceRequestDto } from '../../app/actions/create-invoice-action/create-invoice.request.dto';
+import { PaymentAggregator } from '../../../payments/domain/aggregators/payment.aggregator';
 
 @Injectable()
 export class InvoiceService {
@@ -13,6 +15,8 @@ export class InvoiceService {
     private readonly fetchInvoicesTransactionScript: FetchInvoicesTransactionScript,
     private readonly getInvoiceByIdTransactionScript: GetInvoiceByIdTransactionScript,
     private readonly updateInvoiceStatusTransactionScript: UpdateInvoiceStatusTransactionScript,
+    private readonly cancelInvoiceTransactionScript: CancelInvoiceTransactionScript,
+    private readonly paymentAggregator: PaymentAggregator,
   ) {}
 
   async createInvoice(
@@ -59,5 +63,34 @@ export class InvoiceService {
       newBalanceDue,
       newStatus,
     );
+  }
+
+  async cancelInvoice(
+    invoiceId: number,
+    issuerUserId: number,
+  ): Promise<Invoice> {
+    const invoice = await this.getInvoiceById(invoiceId);
+    if (!invoice) {
+      throw new Error('Invoice not found');
+    }
+
+    if (invoice.issuerUserId !== issuerUserId) {
+      throw new Error('Unauthorized: Only the issuer can cancel this invoice');
+    }
+
+    if (invoice.status === INVOICE_STATUS.CANCELLED) {
+      throw new Error('Invoice is already cancelled');
+    }
+
+    const hasPayments = await this.paymentAggregator.hasPaymentApplications(
+      invoiceId,
+    );
+    if (hasPayments) {
+      throw new Error(
+        'Cannot cancel invoice: Invoice has existing payments applied to it',
+      );
+    }
+
+    return await this.cancelInvoiceTransactionScript.execute(invoiceId);
   }
 }

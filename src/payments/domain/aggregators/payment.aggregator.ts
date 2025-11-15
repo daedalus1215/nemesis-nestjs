@@ -8,6 +8,7 @@ import {
 import { PaymentRepository } from '../../infra/repositories/payment.repository';
 import { CreatePaymentApplicationTransactionScript } from '../transaction-scripts/create-payment-application-TS/create-payment-application.transaction.script';
 import { PaymentApplication } from '../entities/payment-application.entity';
+import { PaymentApplicationRepository } from '../../infra/repositories/payment-application.repository';
 
 export type CreatePaymentCommand = {
   debitAccountId: number;
@@ -24,6 +25,7 @@ export class PaymentAggregator {
   constructor(
     private readonly paymentRepository: PaymentRepository,
     private readonly createPaymentApplicationTransactionScript: CreatePaymentApplicationTransactionScript,
+    private readonly paymentApplicationRepository: PaymentApplicationRepository,
   ) {}
 
   async getAccountBalance(accountId: number): Promise<number> {
@@ -126,5 +128,15 @@ export class PaymentAggregator {
       invoiceId,
       appliedAmount,
     );
+  }
+
+  /**
+   * Check if an invoice has any payment applications
+   */
+  async hasPaymentApplications(invoiceId: number): Promise<boolean> {
+    const applications = await this.paymentApplicationRepository.findByInvoiceId(
+      invoiceId,
+    );
+    return applications.length > 0;
   }
 }
