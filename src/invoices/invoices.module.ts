@@ -15,8 +15,11 @@ import { FetchInvoiceByIdAction } from './app/actions/fetch-invoice-by-id-action
 import { FetchInvoiceByIdResponder } from './app/actions/fetch-invoice-by-id-action/fetch-invoice-by-id.responder';
 import { PayInvoiceAction } from './app/actions/pay-invoice-action/pay-invoice.action';
 import { PayInvoiceResponder } from './app/actions/pay-invoice-action/pay-invoice.responder';
+import { CancelInvoiceAction } from './app/actions/cancel-invoice-action/cancel-invoice.action';
+import { CancelInvoiceResponder } from './app/actions/cancel-invoice-action/cancel-invoice.responder';
 import { InvoiceAppService } from './app/app-service/invoice.app.service';
 import { PaymentsModule } from '../payments/payment.module';
+import { CancelInvoiceTransactionScript } from './domain/transaction-scripts/cancel-invoice-TS/cancel-invoice.transaction.script';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Invoice]), PaymentsModule],
@@ -26,18 +29,21 @@ import { PaymentsModule } from '../payments/payment.module';
     FetchInvoicesTransactionScript,
     GetInvoiceByIdTransactionScript,
     UpdateInvoiceStatusTransactionScript,
+    CancelInvoiceTransactionScript,
     InvoiceService,
     InvoiceAppService,
     CreateInvoiceResponder,
     FetchInvoicesResponder,
     FetchInvoiceByIdResponder,
     PayInvoiceResponder,
+    CancelInvoiceResponder,
   ],
   controllers: [
     CreateInvoiceAction,
     FetchInvoicesAction,
     FetchInvoiceByIdAction,
     PayInvoiceAction,
+    CancelInvoiceAction,
   ],
   exports: [InvoiceService],
 })

@@ -5,6 +5,7 @@ export const INVOICE_STATUS = {
   SENT: 'sent',
   PAID: 'paid',
   OVERDUE: 'overdue',
+  CANCELLED: 'cancelled',
 } as const;
 
 export type InvoiceStatusType =

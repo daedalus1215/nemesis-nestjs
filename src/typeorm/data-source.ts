@@ -2,7 +2,7 @@ import * as path from 'path';
 import { DataSource } from 'typeorm';
 
 const AppDataSource = new DataSource({
-  type: 'sqlite',
+  type: 'better-sqlite3',
   database: path.join(__dirname, '../../db.sqlite'),
   entities: [__dirname + '/../**/*.entity{.ts,.js}'],
   migrations: ['src/typeorm/migrations/*.ts'],

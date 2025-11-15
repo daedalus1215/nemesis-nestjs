@@ -1,6 +1,6 @@
-export type FetchInvoicesResponseDto = {
-  invoices: InvoiceDto[];
+export type CancelInvoiceResponseDto = {
   success: boolean;
+  invoice: InvoiceDto;
 };
 
 export type InvoiceDto = {
@@ -10,7 +10,8 @@ export type InvoiceDto = {
   total: number;
   balanceDue: number;
   status: string;
-  issueDate: Date;
-  dueDate: Date;
+  issueDate: string;
+  dueDate: string;
   description?: string;
 };
+

@@ -1,20 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { Invoice } from '../../../domain/entities/invoice.entity';
-import {
-  FetchInvoicesResponseDto,
-  InvoiceDto,
-} from './fetch-invoices.response.dto';
+import { CancelInvoiceResponseDto, InvoiceDto } from './cancel-invoice.response.dto';
 
 @Injectable()
-export class FetchInvoicesResponder {
-  public apply(invoices: Invoice[]): FetchInvoicesResponseDto {
+export class CancelInvoiceResponder {
+  public apply(invoice: Invoice): CancelInvoiceResponseDto {
     return {
-      invoices: invoices.map((invoice) => this.toDto(invoice)),
       success: true,
+      invoice: this.toDto(invoice),
     };
   }
 
   private toDto(invoice: Invoice): InvoiceDto {
+
+
+    
+    const formatDate = (date: Date | string): string => {
+      if (date instanceof Date) {
+        return date.toISOString().split('T')[0];
+      }
+      return date;
+    };
+
     return {
       id: invoice.id,
       issuerUserId: invoice.issuerUserId,
@@ -22,9 +29,10 @@ export class FetchInvoicesResponder {
       total: Number(invoice.total),
       balanceDue: Number(invoice.balanceDue),
       status: invoice.status,
-      issueDate: invoice.issueDate,
-      dueDate: invoice.dueDate,
+      issueDate: formatDate(invoice.issueDate),
+      dueDate: formatDate(invoice.dueDate),
       description: invoice.description,
     };
   }
 }
+
