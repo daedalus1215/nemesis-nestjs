@@ -18,4 +18,3 @@ export class CancelInvoiceTransactionScript {
     return await this.invoiceRepository.update(invoice);
   }
 }
-

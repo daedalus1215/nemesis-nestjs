@@ -22,9 +22,6 @@ import { AccountsModule } from '../ledger/accounts/accounts.module';
     CreatePaymentApplicationTransactionScript,
     { provide: 'PaymentRepositoryPort', useClass: PaymentRepository },
   ],
-  exports: [
-    PaymentAggregator,
-    PaymentService,
-  ],
+  exports: [PaymentAggregator, PaymentService],
 })
 export class PaymentsModule {}

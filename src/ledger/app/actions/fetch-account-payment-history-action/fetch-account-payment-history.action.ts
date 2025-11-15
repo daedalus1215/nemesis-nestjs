@@ -3,7 +3,7 @@ import {
   AuthUser,
   GetAuthUser,
 } from '../../../../auth/app/decorators/get-auth-user.decorator';
-import { ProtectedAction } from '../../../../shared/application/protected-action-options';    
+import { ProtectedAction } from '../../../../shared/application/protected-action-options';
 import { FetchPaymentHistoryRequestDto } from './fetch-account-payment-history.request.dto';
 import { AccountTransactionHistoryResponseDto } from './fetch-account-payment-history.response.dto';
 import { FetchAccountPaymentHistorySwagger } from './fetch-account-payment-history.swagger';
@@ -11,7 +11,7 @@ import { PaymentService } from 'src/payments/domain/services/payment.service';
 
 @Controller('accounts')
 export class FetchAccountPaymentHistoryAction {
-    constructor(private readonly paymentService: PaymentService) {}
+  constructor(private readonly paymentService: PaymentService) {}
 
   @Get(':accountId/payments')
   @ProtectedAction({

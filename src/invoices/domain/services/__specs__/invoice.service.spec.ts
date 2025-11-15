@@ -4,8 +4,13 @@ import { CreateInvoiceTransactionScript } from '../../transaction-scripts/create
 import { FetchInvoicesTransactionScript } from '../../transaction-scripts/fetch-invoices-TS/fetch-invoices.transaction.script';
 import { GetInvoiceByIdTransactionScript } from '../../transaction-scripts/get-invoice-by-id-TS/get-invoice-by-id.transaction.script';
 import { UpdateInvoiceStatusTransactionScript } from '../../transaction-scripts/update-invoice-status-TS/update-invoice-status.transaction.script';
+import { CancelInvoiceTransactionScript } from '../../transaction-scripts/cancel-invoice-TS/cancel-invoice.transaction.script';
+import { PaymentAggregator } from '../../../../payments/domain/aggregators/payment.aggregator';
 import { CreateInvoiceRequestDto } from '../../../app/actions/create-invoice-action/create-invoice.request.dto';
-import {  InvoiceStatusType, INVOICE_STATUS } from '../../entities/invoice.entity';
+import {
+  InvoiceStatusType,
+  INVOICE_STATUS,
+} from '../../entities/invoice.entity';
 import { createMockInvoice } from '../../../../shared/test/invoice-test-utils';
 
 describe('InvoiceService', () => {
@@ -45,6 +50,14 @@ describe('InvoiceService', () => {
       execute: jest.fn(),
     };
 
+    const mockCancelInvoiceTransactionScript = {
+      execute: jest.fn(),
+    };
+
+    const mockPaymentAggregator = {
+      hasPaymentApplications: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         InvoiceService,
@@ -64,14 +77,26 @@ describe('InvoiceService', () => {
           provide: UpdateInvoiceStatusTransactionScript,
           useValue: mockUpdateInvoiceStatusTransactionScript,
         },
+        {
+          provide: CancelInvoiceTransactionScript,
+          useValue: mockCancelInvoiceTransactionScript,
+        },
+        {
+          provide: PaymentAggregator,
+          useValue: mockPaymentAggregator,
+        },
       ],
     }).compile();
 
     target = module.get<InvoiceService>(InvoiceService);
     createInvoiceTransactionScript = module.get(CreateInvoiceTransactionScript);
     fetchInvoicesTransactionScript = module.get(FetchInvoicesTransactionScript);
-    getInvoiceByIdTransactionScript = module.get(GetInvoiceByIdTransactionScript);
-    updateInvoiceStatusTransactionScript = module.get(UpdateInvoiceStatusTransactionScript);
+    getInvoiceByIdTransactionScript = module.get(
+      GetInvoiceByIdTransactionScript,
+    );
+    updateInvoiceStatusTransactionScript = module.get(
+      UpdateInvoiceStatusTransactionScript,
+    );
   });
 
   describe('createInvoice', () => {
@@ -91,7 +116,10 @@ describe('InvoiceService', () => {
 
       // Assert
       expect(result).toEqual(mockInvoice);
-      expect(createInvoiceTransactionScript.execute).toHaveBeenCalledWith(dto, userId);
+      expect(createInvoiceTransactionScript.execute).toHaveBeenCalledWith(
+        dto,
+        userId,
+      );
     });
   });
 
@@ -109,12 +137,18 @@ describe('InvoiceService', () => {
 
       // Assert
       expect(result).toEqual(mockInvoices);
-      expect(fetchInvoicesTransactionScript.execute).toHaveBeenCalledWith(userId, undefined);
+      expect(fetchInvoicesTransactionScript.execute).toHaveBeenCalledWith(
+        userId,
+        undefined,
+      );
     });
 
     it('should fetch invoices with status filter', async () => {
       // Arrange
-      const statuses: InvoiceStatusType[] = [INVOICE_STATUS.SENT, INVOICE_STATUS.PAID];
+      const statuses: InvoiceStatusType[] = [
+        INVOICE_STATUS.SENT,
+        INVOICE_STATUS.PAID,
+      ];
       const mockInvoices = [createMockInvoice({ status: INVOICE_STATUS.SENT })];
       fetchInvoicesTransactionScript.execute.mockResolvedValue(mockInvoices);
 
@@ -123,7 +157,10 @@ describe('InvoiceService', () => {
 
       // Assert
       expect(result).toEqual(mockInvoices);
-      expect(fetchInvoicesTransactionScript.execute).toHaveBeenCalledWith(userId, statuses);
+      expect(fetchInvoicesTransactionScript.execute).toHaveBeenCalledWith(
+        userId,
+        statuses,
+      );
     });
   });
 
@@ -138,7 +175,9 @@ describe('InvoiceService', () => {
 
       // Assert
       expect(result).toEqual(mockInvoice);
-      expect(getInvoiceByIdTransactionScript.execute).toHaveBeenCalledWith(invoiceId);
+      expect(getInvoiceByIdTransactionScript.execute).toHaveBeenCalledWith(
+        invoiceId,
+      );
     });
 
     it('should return null when invoice not found', async () => {
@@ -150,7 +189,9 @@ describe('InvoiceService', () => {
 
       // Assert
       expect(result).toBeNull();
-      expect(getInvoiceByIdTransactionScript.execute).toHaveBeenCalledWith(invoiceId);
+      expect(getInvoiceByIdTransactionScript.execute).toHaveBeenCalledWith(
+        invoiceId,
+      );
     });
   });
 
@@ -160,10 +201,12 @@ describe('InvoiceService', () => {
       getInvoiceByIdTransactionScript.execute.mockResolvedValue(null);
 
       // Act & Assert
-      await expect(
-        target.applyPaymentToInvoice(invoiceId, 50),
-      ).rejects.toThrow('Invoice not found');
-      expect(updateInvoiceStatusTransactionScript.execute).not.toHaveBeenCalled();
+      await expect(target.applyPaymentToInvoice(invoiceId, 50)).rejects.toThrow(
+        'Invoice not found',
+      );
+      expect(
+        updateInvoiceStatusTransactionScript.execute,
+      ).not.toHaveBeenCalled();
     });
 
     it('should throw error when payment amount exceeds balance due', async () => {
@@ -178,7 +221,9 @@ describe('InvoiceService', () => {
       await expect(
         target.applyPaymentToInvoice(invoiceId, 150),
       ).rejects.toThrow('Payment amount (150) exceeds balance due (100)');
-      expect(updateInvoiceStatusTransactionScript.execute).not.toHaveBeenCalled();
+      expect(
+        updateInvoiceStatusTransactionScript.execute,
+      ).not.toHaveBeenCalled();
     });
 
     it('should update invoice status to PAID when balance reaches zero', async () => {
@@ -195,10 +240,15 @@ describe('InvoiceService', () => {
         status: INVOICE_STATUS.PAID,
       });
       getInvoiceByIdTransactionScript.execute.mockResolvedValue(mockInvoice);
-      updateInvoiceStatusTransactionScript.execute.mockResolvedValue(updatedInvoice);
+      updateInvoiceStatusTransactionScript.execute.mockResolvedValue(
+        updatedInvoice,
+      );
 
       // Act
-      const result = await target.applyPaymentToInvoice(invoiceId, paymentAmount);
+      const result = await target.applyPaymentToInvoice(
+        invoiceId,
+        paymentAmount,
+      );
 
       // Assert
       expect(result).toEqual(updatedInvoice);
@@ -223,10 +273,15 @@ describe('InvoiceService', () => {
         status: INVOICE_STATUS.SENT,
       });
       getInvoiceByIdTransactionScript.execute.mockResolvedValue(mockInvoice);
-      updateInvoiceStatusTransactionScript.execute.mockResolvedValue(updatedInvoice);
+      updateInvoiceStatusTransactionScript.execute.mockResolvedValue(
+        updatedInvoice,
+      );
 
       // Act
-      const result = await target.applyPaymentToInvoice(invoiceId, paymentAmount);
+      const result = await target.applyPaymentToInvoice(
+        invoiceId,
+        paymentAmount,
+      );
 
       // Assert
       expect(result).toEqual(updatedInvoice);
@@ -251,10 +306,15 @@ describe('InvoiceService', () => {
         status: INVOICE_STATUS.OVERDUE,
       });
       getInvoiceByIdTransactionScript.execute.mockResolvedValue(mockInvoice);
-      updateInvoiceStatusTransactionScript.execute.mockResolvedValue(updatedInvoice);
+      updateInvoiceStatusTransactionScript.execute.mockResolvedValue(
+        updatedInvoice,
+      );
 
       // Act
-      const result = await target.applyPaymentToInvoice(invoiceId, paymentAmount);
+      const result = await target.applyPaymentToInvoice(
+        invoiceId,
+        paymentAmount,
+      );
 
       // Assert
       expect(result).toEqual(updatedInvoice);
@@ -266,4 +326,3 @@ describe('InvoiceService', () => {
     });
   });
 });
-

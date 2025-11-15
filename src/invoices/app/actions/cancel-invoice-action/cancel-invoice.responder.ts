@@ -1,6 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Invoice } from '../../../domain/entities/invoice.entity';
-import { CancelInvoiceResponseDto, InvoiceDto } from './cancel-invoice.response.dto';
+import {
+  CancelInvoiceResponseDto,
+  InvoiceDto,
+} from './cancel-invoice.response.dto';
 
 @Injectable()
 export class CancelInvoiceResponder {
@@ -12,9 +15,6 @@ export class CancelInvoiceResponder {
   }
 
   private toDto(invoice: Invoice): InvoiceDto {
-
-
-    
     const formatDate = (date: Date | string): string => {
       if (date instanceof Date) {
         return date.toISOString().split('T')[0];
@@ -35,4 +35,3 @@ export class CancelInvoiceResponder {
     };
   }
 }
-

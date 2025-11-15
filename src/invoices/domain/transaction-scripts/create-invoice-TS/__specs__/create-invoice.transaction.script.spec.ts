@@ -15,13 +15,21 @@ describe('CreateInvoiceTransactionScript', () => {
 
   const createValidDto = (
     overrides?: Partial<CreateInvoiceRequestDto>,
-  ): CreateInvoiceRequestDto => ({
-    debtorUserId,
-    amount,
-    dueDate: new Date(Date.now() + 86400000).toISOString().split('T')[0],
-    description: 'Test invoice description',
-    ...overrides,
-  });
+  ): CreateInvoiceRequestDto => {
+    // Create a due date that's definitely in the future (2 days from now)
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + 2);
+    futureDate.setHours(0, 0, 0, 0);
+    const dueDateString = futureDate.toISOString().split('T')[0];
+
+    return {
+      debtorUserId,
+      amount,
+      dueDate: dueDateString,
+      description: 'Test invoice description',
+      ...overrides,
+    };
+  };
 
   beforeEach(async () => {
     const mockInvoiceRepository = {
@@ -168,7 +176,13 @@ describe('CreateInvoiceTransactionScript', () => {
 
     it('should throw error when debtorUserId equals issuerUserId', async () => {
       // Arrange
-      const dto = createValidDto();
+      // Use a due date that's definitely in the future to avoid the "due date must be in the future" error
+      const futureDate = new Date();
+      futureDate.setDate(futureDate.getDate() + 2);
+      futureDate.setHours(0, 0, 0, 0);
+      const dto = createValidDto({
+        dueDate: futureDate.toISOString().split('T')[0],
+      });
 
       // Act & Assert
       await expect(target.execute(dto, debtorUserId)).rejects.toThrow(

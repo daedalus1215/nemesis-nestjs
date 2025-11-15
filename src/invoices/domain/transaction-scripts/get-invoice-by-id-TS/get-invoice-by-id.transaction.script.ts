@@ -10,4 +10,3 @@ export class GetInvoiceByIdTransactionScript {
     return await this.invoiceRepository.findById(invoiceId);
   }
 }
-

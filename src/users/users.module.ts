@@ -29,6 +29,6 @@ import { FetchUserAction } from './app/controllers/fetch-user-action/fetch-user.
     UserAggregator,
   ],
   controllers: [FetchProfileAction, FetchUserAction, RegisterUserAction],
-  exports: [UserAggregator, UserRepository, UsersService],
+  exports: [UserAggregator],
 })
 export class UsersModule {}

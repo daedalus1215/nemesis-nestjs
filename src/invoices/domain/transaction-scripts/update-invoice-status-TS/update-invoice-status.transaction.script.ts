@@ -9,7 +9,7 @@ export class UpdateInvoiceStatusTransactionScript {
   async execute(
     invoiceId: number,
     balanceDue: number,
-    status: typeof INVOICE_STATUS[keyof typeof INVOICE_STATUS],
+    status: (typeof INVOICE_STATUS)[keyof typeof INVOICE_STATUS],
   ): Promise<Invoice> {
     const invoice = await this.invoiceRepository.findById(invoiceId);
     if (!invoice) {
@@ -22,4 +22,3 @@ export class UpdateInvoiceStatusTransactionScript {
     return await this.invoiceRepository.update(invoice);
   }
 }
-

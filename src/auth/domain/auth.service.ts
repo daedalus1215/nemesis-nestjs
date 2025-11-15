@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from '../../users/domain/entities/user.entity';
-import { UsersService } from '../../users/domain/services/users.service';
+import { UserAggregator } from 'src/users/domain/user.aggregator';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
+    private readonly userAggregator: UserAggregator,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -15,7 +15,7 @@ export class AuthService {
     username: string,
     password: string,
   ): Promise<Omit<User, 'password'> | null> {
-    const user = await this.usersService.findByUsernameWithPassword(username);
+    const user = await this.userAggregator.findByUsernameWithPassword(username);
 
     if (user && (await bcrypt.compare(password, user.password))) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
