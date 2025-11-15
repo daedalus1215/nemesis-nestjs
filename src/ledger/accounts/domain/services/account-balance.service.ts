@@ -33,7 +33,9 @@ export class AccountBalanceService {
     return this.transactionAggregator.getAccountBalance(accountId);
   }
 
-  async getAccountsWithBalances(userId: number): Promise<(Account & { balance: number })[]> {
+  async getAccountsWithBalances(
+    userId: number,
+  ): Promise<(Account & { balance: number })[]> {
     const accounts = await this.accountAggregator.getUserAccounts(userId);
     const balancesEntries = await Promise.all(
       accounts.map(async (account) => [
@@ -41,7 +43,9 @@ export class AccountBalanceService {
         await this.transactionAggregator.getAccountBalance(account.id),
       ]),
     );
-    const balances = Object.fromEntries(balancesEntries) as { [key: number]: number };
+    const balances = Object.fromEntries(balancesEntries) as {
+      [key: number]: number;
+    };
 
     return accounts.map((account) => ({
       ...account,

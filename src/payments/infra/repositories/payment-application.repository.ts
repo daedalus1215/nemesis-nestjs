@@ -10,9 +10,7 @@ export class PaymentApplicationRepository {
     private readonly repository: Repository<PaymentApplication>,
   ) {}
 
-  async create(
-    data: Partial<PaymentApplication>,
-  ): Promise<PaymentApplication> {
+  async create(data: Partial<PaymentApplication>): Promise<PaymentApplication> {
     const paymentApplication = this.repository.create(data);
     return this.repository.save(paymentApplication);
   }
@@ -29,4 +27,3 @@ export class PaymentApplicationRepository {
     });
   }
 }
-

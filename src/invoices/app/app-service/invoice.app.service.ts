@@ -49,16 +49,11 @@ export class InvoiceAppService {
     }
 
     // Create payment application to link payment to invoice
-    const paymentApplicationToInvoice = await this.paymentService.createPaymentApplication(
-      invoice,
-      amountToPay,
-    );
+    const paymentApplicationToInvoice =
+      await this.paymentService.createPaymentApplication(invoice, amountToPay);
 
     // Update invoice balance and status (will only mark as PAID if balance reaches 0)
-    await this.invoiceService.applyPaymentToInvoice(
-      invoice.id,
-      amountToPay,
-    );
+    await this.invoiceService.applyPaymentToInvoice(invoice.id, amountToPay);
 
     return {
       paymentId: paymentApplicationToInvoice.paymentId,

@@ -42,4 +42,3 @@ export class Create_PaymentApplications_Table1762136230680
     console.log('❌ Dropped payment_applications table');
   }
 }
-

@@ -1,8 +1,4 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import {
-  AuthUser,
-  GetAuthUser,
-} from '../../../../auth/app/decorators/get-auth-user.decorator';
 import { ProtectedAction } from '../../../../shared/application/protected-action-options';
 import { InvoiceService } from '../../../domain/services/invoice.service';
 import { FetchInvoiceByIdResponseDto } from './fetch-invoice-by-id.response.dto';
@@ -22,11 +18,8 @@ export class FetchInvoiceByIdAction {
   })
   async handle(
     @Param('invoiceId') invoiceId: number,
-    @GetAuthUser() user: AuthUser,
   ): Promise<FetchInvoiceByIdResponseDto> {
-    const invoice = await this.invoiceService.getInvoiceById(
-      Number(invoiceId),
-    );
+    const invoice = await this.invoiceService.getInvoiceById(Number(invoiceId));
 
     if (!invoice) {
       throw new Error('Invoice not found');
@@ -35,4 +28,3 @@ export class FetchInvoiceByIdAction {
     return this.responder.apply(invoice);
   }
 }
-

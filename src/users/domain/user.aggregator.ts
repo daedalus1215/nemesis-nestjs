@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from 'src/users/infrastructure/user.repository';
+import { User } from './entities/user.entity';
 
 type UserInfo = {
   id: number;
@@ -23,5 +24,9 @@ export class UserAggregator {
       console.error('Failed to fetch users:', error);
       return [];
     }
+  }
+
+  async findByUsernameWithPassword(username: string): Promise<User | null> {
+    return this.repository.findByUsernameWithPassword(username);
   }
 }

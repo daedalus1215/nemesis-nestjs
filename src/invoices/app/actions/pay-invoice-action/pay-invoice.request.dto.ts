@@ -6,4 +6,3 @@ export class PayInvoiceRequestDto {
   @IsPositive()
   amount?: number;
 }
-

@@ -6,7 +6,6 @@ import {
 import { Payment, PaymentCategory } from '../entities/payment.entity';
 import { PaymentApplication } from '../entities/payment-application.entity';
 import { AccountAggregator } from '../../../ledger/accounts/domain/aggregators/account.aggregator';
-import { Invoice } from 'src/invoices/domain/entities/invoice.entity';
 
 @Injectable()
 export class PaymentService {

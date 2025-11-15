@@ -4,7 +4,11 @@ import { FetchInvoicesTransactionScript } from '../transaction-scripts/fetch-inv
 import { GetInvoiceByIdTransactionScript } from '../transaction-scripts/get-invoice-by-id-TS/get-invoice-by-id.transaction.script';
 import { UpdateInvoiceStatusTransactionScript } from '../transaction-scripts/update-invoice-status-TS/update-invoice-status.transaction.script';
 import { CancelInvoiceTransactionScript } from '../transaction-scripts/cancel-invoice-TS/cancel-invoice.transaction.script';
-import { Invoice, InvoiceStatusType, INVOICE_STATUS } from '../entities/invoice.entity';
+import {
+  Invoice,
+  InvoiceStatusType,
+  INVOICE_STATUS,
+} from '../entities/invoice.entity';
 import { CreateInvoiceRequestDto } from '../../app/actions/create-invoice-action/create-invoice.request.dto';
 import { PaymentAggregator } from '../../../payments/domain/aggregators/payment.aggregator';
 
@@ -82,9 +86,8 @@ export class InvoiceService {
       throw new Error('Invoice is already cancelled');
     }
 
-    const hasPayments = await this.paymentAggregator.hasPaymentApplications(
-      invoiceId,
-    );
+    const hasPayments =
+      await this.paymentAggregator.hasPaymentApplications(invoiceId);
     if (hasPayments) {
       throw new Error(
         'Cannot cancel invoice: Invoice has existing payments applied to it',

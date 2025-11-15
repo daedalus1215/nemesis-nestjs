@@ -14,4 +14,3 @@ export type InvoiceDto = {
   dueDate: string;
   description?: string;
 };
-

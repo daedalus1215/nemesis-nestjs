@@ -134,9 +134,8 @@ export class PaymentAggregator {
    * Check if an invoice has any payment applications
    */
   async hasPaymentApplications(invoiceId: number): Promise<boolean> {
-    const applications = await this.paymentApplicationRepository.findByInvoiceId(
-      invoiceId,
-    );
+    const applications =
+      await this.paymentApplicationRepository.findByInvoiceId(invoiceId);
     return applications.length > 0;
   }
 }
